@@ -45,6 +45,7 @@ class Topic(models.Model):
         self.lastSuggestedProblems = ",".join(str(problem.id) for problem in problems)
         self.lastSuggestion = datetime.datetime.now()
         self.nextSuggestion = self.lastSuggestion + datetime.timedelta(hours=self.getLearningLevelInHours())
+        self.learningLevel += 1
         self.save()
 
     def getLearningLevelInHours(self):
@@ -53,13 +54,13 @@ class Topic(models.Model):
         elif self.learningLevel == 1:
             return 24 * 7
         elif self.learningLevel == 2:
-            return 24 * 30
+            return 24 * 14
         elif self.learningLevel == 3:
-            return 24 * 60
+            return 24 * 30
         elif self.learningLevel == 4:
-            return 24 * 120
+            return 24 * 60
         else:
-            return 24 * 70 * (5 ** (self.learningLevel / 5))
+            return 24 * 24 * (5 ** (self.learningLevel / 5))
 
     def getHoursLeftToSuggest(self):
         diferenca = self.nextSuggestion - datetime.datetime.now()
@@ -73,6 +74,7 @@ class Problem(models.Model):
     problemStatement = models.TextField(max_length=1000)  # Can be HTML code
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     gotIt = models.BooleanField()
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
     
     def __str__(self):
         return f"Problem: {self.problemStatement} - Topic: {self.topic}"
