@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang = "pt-br">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>
+        Home Page
+        </title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+
+        <style>
+    /* Paleta de cores */
+    .color1 { color: #000000; }
+    .color2 { color: #7890a8; }
+    .color3 { color: #304878; }
+    .color4 { color: #181848; }
+    .color5 { color: #f0a818; }
+    /* Estilo do Header */
+
+body {
+    margin: 0;
+    padding: 0;
+}
+.header {
+    background-color: #181848; /* Cor do fundo */
+    padding: 15px 0; /* Espaçamento vertical dentro do header */
+    border-bottom: 2px solid #304878; /* Barra separadora do body */
+    margin-top: 0 !important; /* Remove qualquer margem superior */
+    margin-bottom: 30px; /* Aumenta a distância entre o header e o restante do body */
+}
+
+/* Estilo da Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilo da lista de links */
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    width: 100%;
+}
+
+/* Estilo para os itens individuais (links) */
+.nav-item {
+    flex-grow: 1;
+    text-align: center;
+    border-right: 2px solid #304878;
+    padding: 10px 0;
+}
+
+.nav-item:last-child {
+    border-right: none;
+}
+
+/* Estilo dos links */
+.nav-link {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    display: block;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #f0a818;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+    }
+    
+    .nav-item {
+        border-right: none;
+        border-bottom: 1px solid #304878;
+    }
+
+    .nav-item:last-child {
+        border-bottom: none;
+    }
+}
+
+    /* Estilo da div do item do problema */
+    .problemItem {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        border: 1px solid #304878; /* Cor intermediária para a borda */
+        border-radius: 5px;
+        margin-bottom: 15px;
+        margin-right: 15px;
+        margin-left: 15px;
+        position: relative;
+        min-height: 150px;
+        background-color: #304878; /* Cor de fundo mais clara que o fundo geral */
+    }
+
+    /* Fundo da página com a cor mais escura */
+    body {
+        background-color: #181848; /* Cor mais escura para o fundo da página */
+        color: #f0f0f0; /* Cor branca suave para o texto */
+        font-family: Arial, sans-serif;
+    }
+
+    /* Estilo do conteúdo do problema */
+    .problemContent {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-right: 160px; /* Espaço para a imagem */
+    }
+
+    /* Estilo para o nome do problema */
+    .problemName {
+        font-size: 1.4em;
+        margin-top: 2%;
+        margin-bottom: 1%;
+        color: #f0f0f0; /* Texto branco suave */
+    }
+
+    /* Estilo da matéria e numeração, ambos na mesma linha com espaçamento de 4px */
+    .problemMateria {
+        display: inline-block;
+        margin-right: 4px;
+        color: #7890a8; /* Tom intermediário mais suave */
+    }
+
+    .problemMatInfo {
+        display: inline-block!important;
+        padding: 0px!important;
+    }
+
+    /* Numeração ao lado da matéria */
+    .problemInfo {
+        display: inline-block;
+        color: #f0f0f0;/* Texto branco suave */
+    }
+
+    /* Estilo do nome do dono com espaçamento vertical igual à distância entre matéria e numeração */
+    .problemOwner {
+        margin-top: 4px;
+        font-size: 0.7em;
+        color: #f0a818; /* Destacar a numeração com a cor amarela */
+    }
+
+    /* Estilo da imagem, posicionada no canto direito */
+    .problemImage img {
+        max-width: 150px;
+        height: auto;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        border: 2px solid #f0a818; /* Borda da imagem com cor amarela */
+    }
+
+    /* Ajustes responsivos */
+    @media (max-width: 600px) {
+        .problemItem {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .problemImage img {
+            position: static;
+            margin-top: 10px;
+        }
+    }
+
+
+
+
+        </style>
+    </head>
+    <body>
+    <header class="header">
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li class="nav-item"><a href="/cadastrar-exercicio" class="nav-link">Cadastrar Exercício</a></li>
+            <li class="nav-item"><a href="/calendario" class="nav-link">Calendário</a></li>
+            <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <div class="problemItem">
+        <div class="problemContent">
+            <h5 class="problemName">Aula/Nome do Problema</h5>
+            <div class="problemMatInfo">
+                <p class="problemMateria">Matéria</p>
+                <p class="problemInfo">1/n</p>
+            </div>
+            <p class="problemOwner">Owner</p>
+        </div>
+        <div class="problemImage">
+            <img src="../../images/baseImage.webp" alt="Imagem do problema">
+        </div>
+    </div>
+    <div class="problemItem">
+        <div class="problemContent">
+            <h5 class="problemName">Aula/Nome do Problema</h5>
+            <div class="problemMatInfo">
+                <p class="problemMateria">Matéria</p>
+                <p class="problemInfo">1/n</p>
+            </div>
+            <p class="problemOwner">Owner</p>
+        </div>
+        <div class="problemImage">
+            <img src="../../images/baseImage.webp" alt="Imagem do problema">
+        </div>
+    </div>
+    <div class="problemItem">
+        <div class="problemContent">
+            <h5 class="problemName">Aula/Nome do Problema</h5>
+            <div class="problemMatInfo">
+                <p class="problemMateria">Matéria</p>
+                <p class="problemInfo">1/n</p>
+            </div>
+            <p class="problemOwner">Owner</p>
+        </div>
+        <div class="problemImage">
+            <img src="../../images/baseImage.webp" alt="Imagem do problema">
+        </div>
+    </div>
+    <div class="problemItem">
+        <div class="problemContent">
+            <h5 class="problemName">Aula/Nome do Problema</h5>
+            <div class="problemMatInfo">
+                <p class="problemMateria">Matéria</p>
+                <p class="problemInfo">1/n</p>
+            </div>
+            <p class="problemOwner">Owner</p>
+        </div>
+        <div class="problemImage">
+            <img src="../../images/baseImage.webp" alt="Imagem do problema">
+        </div>
+    </div>
+    <div class="problemItem">
+        <div class="problemContent">
+            <h5 class="problemName">Aula/Nome do Problema</h5>
+            <div class="problemMatInfo">
+                <p class="problemMateria">Matéria</p>
+                <p class="problemInfo">1/n</p>
+            </div>
+            <p class="problemOwner">Owner</p>
+        </div>
+        <div class="problemImage">
+            <img src="../../images/baseImage.webp" alt="Imagem do problema">
+        </div>
+    </div>
+
+    <div class="problemItem">
+        <div class="problemContent">
+            <h5 class="problemName">Aula/Nome do Problema</h5>
+            <div class="problemMatInfo">
+                <p class="problemMateria">Matéria</p>
+                <p class="problemInfo">1/n</p>
+            </div>
+            <p class="problemOwner">Owner</p>
+        </div>
+        <div class="problemImage">
+            <img src="../../images/baseImage.webp" alt="Imagem do problema">
+        </div>
+    </div>
+    <div class="problemItem">
+        <div class="problemContent">
+            <h5 class="problemName">Aula/Nome do Problema</h5>
+            <div class="problemMatInfo">
+                <p class="problemMateria">Matéria</p>
+                <p class="problemInfo">1/n</p>
+            </div>
+            <p class="problemOwner">Owner</p>
+        </div>
+        <div class="problemImage">
+            <img src="../../images/baseImage.webp" alt="Imagem do problema">
+        </div>
+    </div>
+
+        
+        <script src="" async defer></script>
+    </body>
+</html>
