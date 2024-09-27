@@ -33,16 +33,16 @@ class Topic(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    lastSuggestion = models.DateTimeField()
-    nextSuggestion = models.DateTimeField()
+    lastSuggestion = models.DateField()  # Alterado para DateField
+    nextSuggestion = models.DateField()  # Alterado para DateField
     learningLevel = models.IntegerField()
     amountSuggest = models.IntegerField()
     lastSuggestedProblems = models.TextField(max_length=200)
 
     def suggestNext(self):  # Return a boolean and a list of problems
-        # Check if it is between the last and next suggestion
-        if self.getHoursLeftToSuggest() > 0:
-            if (datetime.datetime.now() - self.lastSuggestion).total_seconds() / 3600 < 12:
+        if self.getDaysLeftToSuggest() > 0:
+            # Agora comparando apenas a data
+            if (datetime.date.today() - self.lastSuggestion).days < 1:
                 problemsIds = self.lastSuggestedProblems.split(",")
                 problems = Problem.objects.filter(id__in=problemsIds)
                 return False, problems
@@ -58,29 +58,29 @@ class Topic(models.Model):
     
     def storeLastSuggestedProblems(self, problems):
         self.lastSuggestedProblems = ",".join(str(problem.id) for problem in problems)
-        self.lastSuggestion = datetime.datetime.now()
-        self.nextSuggestion = self.lastSuggestion + datetime.timedelta(hours=self.getLearningLevelInHours())
+        self.lastSuggestion = datetime.date.today()  # Utiliza apenas a data
+        self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
         self.learningLevel += 1
         self.save()
 
-    def getLearningLevelInHours(self):
+    def getLearningLevelInDays(self):
         if self.learningLevel == 0:
-            return 24
+            return 1
         elif self.learningLevel == 1:
-            return 24 * 7
+            return 7
         elif self.learningLevel == 2:
-            return 24 * 14
+            return 14
         elif self.learningLevel == 3:
-            return 24 * 30
+            return 30
         elif self.learningLevel == 4:
-            return 24 * 60
+            return 60
         else:
-            return 24 * 24 * (5 ** (self.learningLevel / 5))
+            return 365 * (5 ** (self.learningLevel / 5))
 
-    def getHoursLeftToSuggest(self):
-        diferenca = self.nextSuggestion - datetime.datetime.now()
-        horas = diferenca.total_seconds() / 3600
-        return horas
+    def getDaysLeftToSuggest(self):
+        diferenca = self.nextSuggestion - datetime.date.today()
+        dias = diferenca.days
+        return dias
     
     def __str__(self):
         return f"{self.name} - Description: {self.description} - Subject: {self.subject}"
