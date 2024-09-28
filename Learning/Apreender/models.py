@@ -40,14 +40,13 @@ class Topic(models.Model):
     lastSuggestedProblems = models.TextField(max_length=200)
 
     def suggestNext(self):  # Return a boolean and a list of problems
-        if self.getDaysLeftToSuggest() > 0:
+        if self.lastSuggestion == datetime.date.today():
+            problemsIds = self.lastSuggestedProblems.split(",")
+            problems = Problem.objects.filter(id__in=problemsIds)
+            return False, problems
             # Agora comparando apenas a data
-            if (datetime.date.today() - self.lastSuggestion).days < 1:
-                problemsIds = self.lastSuggestedProblems.split(",")
-                problems = Problem.objects.filter(id__in=problemsIds)
-                return False, problems
+        elif  self.getDaysLeftToSuggest() > 0:
             return False, []
-        
         # Get all problems for this topic and suggest random amountSuggest problems
         problems = Problem.objects.filter(topic=self).order_by('?')
         if problems.count() < self.amountSuggest:

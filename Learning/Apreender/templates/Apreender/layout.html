@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='../../static/Apreender/style.css' rel="stylesheet">
+        <title>{% block title %}Layout{% endblock %}</title>
+    </head>
+    <body class="">
+        <header class="header">
+    <nav class="navbar">
+        <ul class="nav-links">
+            {% if user.is_authenticated %}
+                <li class="nav-item"><a href="/cadastrar-exercicio" class="nav-link">Cadastrar Exercício</a></li>
+                <li class="nav-item"><a href="/calendario" class="nav-link">Calendário</a></li>
+                <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+            {% else %}
+                <li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
+        {% block body%}{% endblock%}
+    
+</body>
+</html>
