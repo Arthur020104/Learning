@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Topic, Subject, User, Problem
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import datetime
 
@@ -59,7 +60,7 @@ def index(request):
     return render(request, 'Apreender/index.html', {'problems': problems_suggested_for_today})
 
 
-
+@login_required
 def subject(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -125,7 +126,7 @@ def register(request):
         return redirect(reverse("index"))
     
     return render(request, 'Apreender/register.html')
-
+@login_required
 def topic(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -144,10 +145,11 @@ def topic(request):
     subjects = getSubjects(User.objects.get(username=request.user.username))
     
     return render(request, 'Apreender/topic.html', {'subjects': subjects})
-
+@login_required
 def logoutView(request):
     logout(request)
     return redirect(reverse("login"))
+@login_required
 def problem(request):
     if request.method == 'POST':
         problemStatement = request.POST['problemStatement']
