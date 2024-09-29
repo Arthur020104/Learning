@@ -301,3 +301,13 @@ body {
     color: #f0a818;
     opacity: 1; /* Totalmente visível no hover */
 }
+input, textarea {
+    background-color: #7890a8;
+    color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    font-size: 1em;
+}
+
