@@ -34,15 +34,22 @@ class Topic(models.Model):
     description = models.TextField(max_length=500)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     lastSuggestion = models.DateField()  # Alterado para DateField
-    nextSuggestion = models.DateField()  # Alterado para DateField
-    learningLevel = models.IntegerField()
-    amountSuggest = models.IntegerField()
-    lastSuggestedProblems = models.TextField(max_length=200)
-
+    nextSuggestion = models.DateField(null=True)  # Alterado para DateField
+    learningLevel = models.IntegerField(default=0)
+    amountSuggest = models.IntegerField(default=3)
+    lastSuggestedProblems = models.TextField(max_length=200, default="")
+    def load(self):
+        self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
+        self.save()
     def suggestNext(self):  # Return a boolean and a list of problems
         if self.lastSuggestion == datetime.date.today():
             problemsIds = self.lastSuggestedProblems.split(",")
+            if problemsIds == ['']:
+                problemsIds = []
             problems = Problem.objects.filter(id__in=problemsIds)
+            problems = list(problems)
+            if len(problems) == 0:
+                return False, []
             return False, problems
             # Agora comparando apenas a data
         elif  self.getDaysLeftToSuggest() > 0:

@@ -2,6 +2,23 @@
 {% block title %}Home Page{% endblock %}
 {% block body %}
     {% if problems %}
+    <p>Tem problemas</p>
+    {% for problem in problems %}
+    <div class="problemItem">
+        <div class="problemContent">
+            <h5 class="problemName">{{ problem.name }}</h5>
+            <div class="problemMatInfo">
+                <p class="problemMateria">{{ problem.subject.name }}</p>
+                <p class="problemInfo">{{ problem.amountSuggest }}/n</p>
+            </div>
+            <p class="problemOwner">{{ problem.owner.username }}</p>
+        </div>
+        <div class="problemImage">
+            <img src="{{ problem.image.url }}" alt="Imagem do problema">
+        </div>
+    </div>
+    {% endfor %}
+    
     <div class="problemItem">
         <div class="problemContent">
             <h5 class="problemName">Aula/Nome do Problema</h5>
@@ -15,8 +32,9 @@
             <img src="http://localhost:8000/media/images/baseImage.webp" alt="Imagem do problema">
         </div>
     </div>
-    {% endif %}
+    {% else %}
     <p>Não tem problemas</p>
+    {% endif %}
 
         
 {% endblock %}

@@ -1,0 +1,40 @@
+{% extends "Apreender/layout.html" %}
+{% block title %}topic{% endblock %}
+{% block body %}
+{% if errorMessage %}
+        <div class="alert alert-error">{{ errorMessage }}</div>
+{% endif %}
+<div class="register-container">
+    <div class="register-box">
+        <h2 class="register-title">Registrar Novo Tópico</h2>
+        <form class="register-form" action="{% url 'topic'%}" method="POST">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="name">Nome do Tópico</label>
+                <input type="text" id="name" name="name" maxlength="100" required>
+            </div>
+            <div class="input-group">
+                <label for="description">Descrição</label>
+                <textarea id="description" name="description" maxlength="500" rows="5" required></textarea>
+            </div>
+            <div class="input-group">
+                <label for="subject">Assunto</label>
+                <select id="subject" name="subject" required>
+                    {% for subject in subjects %}
+                        <option value="{{ subject.id }}">{{ subject.name }}</option>
+                    {% endfor %}
+                   
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="amountSuggest">Quantidade de Sugestões</label>
+                <input type="number" id="amountSuggest" name="amountSuggest" value="3" min="1" required>
+            </div>
+            <button type="submit" class="btn-register">Registrar</button>
+        </form>
+    </div>
+</div>
+
+
+        
+{% endblock %}

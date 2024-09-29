@@ -311,3 +311,35 @@ input, textarea {
     font-size: 1em;
 }
 
+/* Estilo para o campo select */
+select {
+    background-color: #7890a8; /* Cor de fundo do select */
+    color: #000000; /* Cor do texto */
+    padding: 10px; /* Espaçamento interno */
+    border-radius: 5px; /* Bordas arredondadas */
+    border: none; /* Remove a borda padrão */
+    font-size: 1em; /* Tamanho do texto */
+    width: 100%; /* Ocupa toda a largura disponível */
+    appearance: none; /* Remove a seta padrão do select */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><polygon points="0,0 140,0 70,70" fill="%23000000"/></svg>'); /* Adiciona uma seta personalizada */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Posiciona a seta à direita */
+    background-size: 10px; /* Tamanho da seta */
+}
+
+select:hover {
+    background-color: #f0a818; /* Cor de fundo ao passar o mouse */
+    color: #000000; /* Mantém a cor do texto */
+}
+
+select:focus {
+    outline: none; /* Remove a borda de foco padrão */
+    box-shadow: 0 0 5px #f0a818; /* Adiciona um leve brilho ao focar */
+}
+
+option {
+    background-color: #7890a8; /* Cor de fundo das opções */
+    color: #000000; /* Cor do texto nas opções */
+}

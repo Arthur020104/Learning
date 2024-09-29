@@ -3,7 +3,19 @@ from django.http import HttpResponse
 from .models import Topic, Subject, User
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
+import datetime
 
+# Dicionário para armazenar cache por usuário
+subjectsCache = {}
+
+def getSubjects(user):
+    global subjectsCache
+    # Verificar se já existe cache para o usuário atual
+    if user.username not in subjectsCache:
+        subjects = Subject.objects.filter(owner=user)
+        # Armazenar os dados dos assuntos em formato de lista
+        subjectsCache[user.username] = list(subjects.values())
+    return subjectsCache[user.username]
 
 def index(request):
     # Verificar se o usuário está logado
@@ -13,18 +25,19 @@ def index(request):
     # Obter o usuário
     user = User.objects.get(username=request.user.username)
     
-    # Obter todos os assuntos do usuário
-    subjects = Subject.objects.filter(owner=user)
+    # Obter os assuntos do cache ou carregar
+    subjects = getSubjects(user)
     
     problemsSuggestForToday = []
 
     # Iterar sobre todos os assuntos e sugerir problemas
     for subject in subjects:
-        topics = Topic.objects.filter(subject=subject)
+        print(subject)
+        topics = Topic.objects.filter(subject=subject['id'])
         for topic in topics:
             askForMoreProblems, problems = topic.suggestNext()
-            problemsSuggestForToday.append(problems)
-
+            if len(problems) > 0:
+                problemsSuggestForToday.append(problems)
     # Renderizar a página com os problemas sugeridos
     return render(request, 'Apreender/index.html', {'problems': problemsSuggestForToday})
 
@@ -36,8 +49,20 @@ def subject(request):
         
         subject = Subject(name=name, description=description, owner=owner)
         subject.save()
-        #when the topic page is ready change the redirect to the topic page
+
+        # Atualizar o cache do usuário
+        global subjectsCache
+        if owner.username in subjectsCache:
+            subjectsCache[owner.username].append({
+                'id': subject.id,
+                'name': subject.name,
+                'description': subject.description,
+                'owner_id': subject.owner_id
+            })
+
+        # Quando a página de tópico estiver pronta, mude o redirecionamento para lá
         return redirect(reverse("index"))
+    
     return render(request, 'Apreender/subject.html')
 
 def loginView(request):
@@ -56,7 +81,6 @@ def loginView(request):
         return redirect(reverse("index"))
     
     return render(request, 'Apreender/login.html')
-
 
 def register(request):
     if request.method == 'POST':
@@ -82,3 +106,26 @@ def register(request):
         return redirect(reverse("index"))
     
     return render(request, 'Apreender/register.html')
+
+def topic(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        description = request.POST['description']
+        subject = Subject.objects.get(id=request.POST['subject'])
+        lastSuggestion = datetime.date.today()
+        amountSuggest = request.POST['amountSuggest']
+        
+        topic = Topic(name=name, description=description, subject=subject, lastSuggestion=lastSuggestion, amountSuggest=amountSuggest)
+        topic.save()
+        topic.load()
+        return redirect(reverse("index"))
+
+    # Carregar assuntos do usuário
+    global subjectsCache
+    subjects = getSubjects(User.objects.get(username=request.user.username))
+    
+    return render(request, 'Apreender/topic.html', {'subjects': subjects})
+
+def logout(request):
+    logout(request)
+    return redirect(reverse("index"))
