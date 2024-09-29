@@ -161,3 +161,143 @@ body {
             margin-top: 10px;
         }
     }
+/* Container Principal */
+.login-container, .register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #181848; /* Fundo mais escuro */
+}
+
+.login-box, .register-box {
+    background-color: #304878; /* Fundo mais claro para as caixas */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Títulos */
+.login-title, .register-title {
+    color: #f0f0f0; /* Texto branco suave */
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+/* Formulário */
+.login-form, .register-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    color: #f0f0f0;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #7890a8;
+    color: #000000;
+    font-size: 1em;
+}
+
+/* Botões */
+.btn-login, .btn-register {
+    background-color: #f0a818; /* Botão com cor vibrante */
+    color: #000000;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-login:hover, .btn-register:hover {
+    background-color: #f0f0f0; /* Leve mudança de cor no hover */
+}
+
+/* Links de navegação */
+.register-link, .login-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.register-link a, .login-link a {
+    color: #f0a818;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover, .login-link a:hover {
+    text-decoration: underline;
+}
+/* Container de Alerta Padrão */
+.alert {
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    font-size: 1.2em;
+    font-weight: bold;
+    position: relative;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #f0f0f0; /* Cor de texto */
+    border-left: 8px solid; /* Borda lateral mais espessa */
+}
+
+/* Estilo do Alerta de Sucesso */
+.alert-success {
+    background-color: #304878; /* Azul escuro */
+    border-left-color: #f0a818; /* Borda lateral amarela */
+}
+
+/* Estilo do Alerta de Erro */
+.alert-error {
+    background-color: #181848; /* Cor mais escura */
+    border-left-color: #f0a818; /* Borda lateral amarela */
+}
+
+/* Estilo do Alerta de Aviso */
+.alert-warning {
+    background-color: #7890a8; /* Azul claro */
+    border-left-color: #f0a818; /* Borda lateral amarela */
+}
+
+/* Estilo do Alerta de Informação */
+.alert-info {
+    background-color: #304878; /* Azul escuro */
+    border-left-color: #7890a8; /* Azul claro */
+}
+
+/* Ícone de Fechar */
+.alert .close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5em; /* Ícone maior */
+    color: #f0f0f0;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.8; /* Ícone mais opaco inicialmente */
+    transition: opacity 0.2s ease, color 0.3s ease;
+}
+
+.alert .close-btn:hover {
+    color: #f0a818;
+    opacity: 1; /* Totalmente visível no hover */
+}
