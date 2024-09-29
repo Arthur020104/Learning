@@ -1,40 +1,42 @@
 {% extends "Apreender/layout.html" %}
+
 {% block title %}Home Page{% endblock %}
+
 {% block body %}
     {% if problems %}
-    <p>Tem problemas</p>
-    {% for problem in problems %}
-    <div class="problemItem">
-        <div class="problemContent">
-            <h5 class="problemName">{{ problem.name }}</h5>
-            <div class="problemMatInfo">
-                <p class="problemMateria">{{ problem.subject.name }}</p>
-                <p class="problemInfo">{{ problem.amountSuggest }}/n</p>
+        {% for problem in problems %}
+            <div class="problemItem">
+                <div class="problemContent">
+                    <h5 class="problemName">{{ problem.topic.name}}</h5>
+                    <div class="problemMatInfo">
+                        {% if problem.subject %}
+                            <p class="problemMateria">{{ problem.topic.subject.name }}</p>
+                        {% else %}
+                            <p class="problemMateria">Materia não disponível</p>
+                        {% endif %}
+                        
+                        {% if problem.topic %}
+                            <p class="problemInfo">{{ forloop.counter }}/{{ problem.topic.amountSuggest }}</p>
+                        {% else %}
+                            <p class="problemInfo">Quantidade de sugestões não disponível</p>
+                        {% endif %}
+                    </div>
+                    {% if problem.subject and problem.subject.owner %}
+                        <p class="problemOwner">{{ problem.subject.owner.username }}</p>
+                    {% else %}
+                        <p class="problemOwner">Proprietário não disponível</p>
+                    {% endif %}
+                </div>
+                <div class="problemImage">
+                    {% if problem.image %}
+                        <img src="media/{{ problem.image }}" alt="Imagem do problema">
+                    {% else %}
+                        <p>Imagem não disponível</p>
+                    {% endif %}
+                </div>
             </div>
-            <p class="problemOwner">{{ problem.owner.username }}</p>
-        </div>
-        <div class="problemImage">
-            <img src="{{ problem.image.url }}" alt="Imagem do problema">
-        </div>
-    </div>
-    {% endfor %}
-    
-    <div class="problemItem">
-        <div class="problemContent">
-            <h5 class="problemName">Aula/Nome do Problema</h5>
-            <div class="problemMatInfo">
-                <p class="problemMateria">Matéria</p>
-                <p class="problemInfo">1/n</p>
-            </div>
-            <p class="problemOwner">Owner</p>
-        </div>
-        <div class="problemImage">
-            <img src="http://localhost:8000/media/images/baseImage.webp" alt="Imagem do problema">
-        </div>
-    </div>
+        {% endfor %}
     {% else %}
-    <p>Não tem problemas</p>
+        <p>Não tem problemas</p>
     {% endif %}
-
-        
 {% endblock %}

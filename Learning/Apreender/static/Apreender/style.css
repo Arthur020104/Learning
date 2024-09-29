@@ -308,7 +308,10 @@ input, textarea {
     border-radius: 5px;
     border: none;
     width: 100%;
-    font-size: 1em;
+}
+textarea 
+{
+    font-size: 1.5em!important;
 }
 
 /* Estilo para o campo select */
@@ -342,4 +345,30 @@ select:focus {
 option {
     background-color: #7890a8; /* Cor de fundo das opções */
     color: #000000; /* Cor do texto nas opções */
+}
+/* Estilo para o input file */
+.input-group input[type="file"] {
+    background-color: #7890a8; /* Cor de fundo para manter a consistência */
+    color: #000000; /* Cor do texto */
+    padding: 10px; /* Espaçamento interno */
+    border-radius: 5px; /* Bordas arredondadas */
+    border: none; /* Remove a borda padrão */
+    font-size: 1em; /* Tamanho do texto */
+    cursor: pointer; /* Cursor em formato de mão para indicar interatividade */
+}
+
+.input-group input[type="file"]::file-selector-button {
+    background-color: #f0a818; /* Cor de fundo do botão do seletor de arquivo */
+    color: #000000; /* Cor do texto do botão */
+    padding: 10px 20px; /* Espaçamento interno para o botão */
+    border: none; /* Remove a borda padrão */
+    border-radius: 5px; /* Bordas arredondadas */
+    font-size: 1em; /* Tamanho do texto */
+    cursor: pointer; /* Cursor em formato de mão para o botão */
+    transition: background-color 0.3s ease; /* Suavização da transição ao passar o mouse */
+}
+
+.input-group input[type="file"]::file-selector-button:hover {
+    background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
+    color: #000000; /* Cor do texto ao passar o mouse */
 }

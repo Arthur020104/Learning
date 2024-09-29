@@ -13,7 +13,7 @@
     <nav class="navbar">
         <ul class="nav-links">
             {% if user.is_authenticated %}
-                <li class="nav-item"><a href="% url 'problem'%}" class="nav-link">Cadastrar Exercício</a></li>
+                <li class="nav-item"><a href="{% url 'problem'%}" class="nav-link">Cadastrar Exercício</a></li>
                 <li class="nav-item"><a href="% url 'calendar'%}" class="nav-link">Calendário</a></li>
                 <li class="nav-item"><a href="{% url 'logout'%}" class="nav-link">Logout</a></li>
             {% else %}

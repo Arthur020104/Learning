@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Topic, Subject, User
+from .models import Topic, Subject, User, Problem
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 import datetime
@@ -18,28 +18,47 @@ def getSubjects(user):
     return subjectsCache[user.username]
 
 def index(request):
-    # Verificar se o usuário está logado
-    if str(request.user) == 'AnonymousUser':
-        return render(request, 'Apreender/index.html', {'problems': None})
-    
-    # Obter o usuário
+    # Obter o usuário logado
     user = User.objects.get(username=request.user.username)
     
     # Obter os assuntos do cache ou carregar
     subjects = getSubjects(user)
     
-    problemsSuggestForToday = []
+    problems_suggested_for_today = []
 
     # Iterar sobre todos os assuntos e sugerir problemas
     for subject in subjects:
-        print(subject)
         topics = Topic.objects.filter(subject=subject['id'])
         for topic in topics:
-            askForMoreProblems, problems = topic.suggestNext()
-            if len(problems) > 0:
-                problemsSuggestForToday.append(problems)
+            # Ajustando a próxima sugestão caso necessário
+            if topic.nextSuggestion is None or topic.id == 1:
+                topic.nextSuggestion = datetime.date.today()
+                topic.save()
+
+            # Sugerir novos problemas
+            ask_for_more_problems, problems = topic.suggestNext()
+            print(f"Problemas sugeridos para o tópico {topic.name}: {problems}")
+            problems = problems
+            print(problems)
+            if problems:
+                # Verificação de dados de cada problema antes de adicionar à lista
+                for problem in problems:
+                    print("here")
+                    print(problem)
+                    problem['topic'] = Topic.objects.get(id=problem['topic_id'])
+                    problem['subject'] = Subject.objects.get(id=problem['topic'].subject_id)
+                    #print(f"Problema: {problem.name}, ID: {problem.id}, Tópico: {problem.topic}, Subject: {problem.subject.name}, Owner: {problem.owner.username}")
+                
+                problems_suggested_for_today.extend(problems)  # Usando extend para evitar listas aninhadas
+
+    # Verificar o conteúdo da lista de problemas sugeridos antes de renderizar
+    if not problems_suggested_for_today:
+        print("Nenhum problema sugerido para hoje.")
+
     # Renderizar a página com os problemas sugeridos
-    return render(request, 'Apreender/index.html', {'problems': problemsSuggestForToday})
+    return render(request, 'Apreender/index.html', {'problems': problems_suggested_for_today})
+
+
 
 def subject(request):
     if request.method == 'POST':
@@ -129,3 +148,18 @@ def topic(request):
 def logoutView(request):
     logout(request)
     return redirect(reverse("login"))
+def problem(request):
+    if request.method == 'POST':
+        problemStatement = request.POST['problemStatement']
+        topic = Topic.objects.get(id=request.POST['topic'])
+        gotIt = False
+        image = request.FILES['image']
+        problem = Problem(problemStatement=problemStatement, topic=topic, gotIt=gotIt, image=image)
+        problem.save()
+        return redirect(reverse("index"))
+    global subjectsCache
+    if not request.user.username in subjectsCache.keys():
+        getSubjects(User.objects.get(username=request.user.username))
+    #get topics that are in the cached user subjects
+    topics = Topic.objects.filter(subject__in=[subject['id'] for subject in subjectsCache[request.user.username]])
+    return render(request, 'Apreender/problem.html', {'topics': topics})

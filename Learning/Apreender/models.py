@@ -38,61 +38,59 @@ class Topic(models.Model):
     learningLevel = models.IntegerField(default=0)
     amountSuggest = models.IntegerField(default=3)
     lastSuggestedProblems = models.TextField(max_length=200, default="")
+
     def load(self):
         self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
         self.save()
-    def suggestNext(self):  # Return a boolean and a list of problems
-        if self.lastSuggestion == datetime.date.today():
-            problemsIds = self.lastSuggestedProblems.split(",")
-            if problemsIds == ['']:
-                problemsIds = []
-            problems = Problem.objects.filter(id__in=problemsIds)
-            problems = list(problems)
-            if len(problems) == 0:
-                return False, []
-            return False, problems
-            # Agora comparando apenas a data
-        elif  self.getDaysLeftToSuggest() > 0:
+
+    def suggestNext(self):
+        problems_ids = self.lastSuggestedProblems.split(",")
+        if problems_ids == ['']:
+            problems_ids = []
+        
+        # Verificar se a última sugestão foi feita hoje
+        if self.lastSuggestion == datetime.date.today() and problems_ids:
+            problems = Problem.objects.filter(id__in=problems_ids).values()
+            if problems.exists():
+                return False, problems
             return False, []
-        # Get all problems for this topic and suggest random amountSuggest problems
-        problems = Problem.objects.filter(topic=self).order_by('?')
-        if problems.count() < self.amountSuggest:
+        
+        # Verificar se é cedo para sugerir novos problemas
+        if self.getDaysLeftToSuggest() > 0:
+            return False, []
+        
+        # Buscar novos problemas e sugerir
+        problems = list(Problem.objects.filter(topic=self).order_by('?'))
+        if len(problems) <= self.amountSuggest:
             self.storeLastSuggestedProblems(problems)
             return True, problems
-        self.storeLastSuggestedProblems(problems[:self.amountSuggest])
-        return False, problems[:self.amountSuggest]
+        else:
+            self.storeLastSuggestedProblems(problems[:self.amountSuggest])
+            return True, problems[:self.amountSuggest]
     
     def storeLastSuggestedProblems(self, problems):
         self.lastSuggestedProblems = ",".join(str(problem.id) for problem in problems)
-        self.lastSuggestion = datetime.date.today()  # Utiliza apenas a data
+        self.lastSuggestion = datetime.date.today()
         self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
         self.learningLevel += 1
         self.save()
 
     def getLearningLevelInDays(self):
-        if self.learningLevel == 0:
-            return 1
-        elif self.learningLevel == 1:
-            return 7
-        elif self.learningLevel == 2:
-            return 14
-        elif self.learningLevel == 3:
-            return 30
-        elif self.learningLevel == 4:
-            return 60
-        else:
-            return 365 * (5 ** (self.learningLevel / 5))
+        learning_days = [1, 7, 14, 30, 60]
+        if self.learningLevel < len(learning_days):
+            return learning_days[self.learningLevel]
+        return 365 * (5 ** (self.learningLevel // 5))
 
     def getDaysLeftToSuggest(self):
-        diferenca = self.nextSuggestion - datetime.date.today()
-        dias = diferenca.days
-        return dias
+        if self.nextSuggestion:
+            return (self.nextSuggestion - datetime.date.today()).days
+        return 0
     
     def __str__(self):
         return f"{self.name} - Description: {self.description} - Subject: {self.subject}"
 
 class Problem(models.Model):
-    problemStatement = models.TextField(max_length=1000)  # Can be HTML code
+    problemStatement = models.TextField(max_length=1000)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     gotIt = models.BooleanField()
     image = models.ImageField(upload_to='images/', blank=True, null=True)

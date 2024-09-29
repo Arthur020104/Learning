@@ -10,4 +10,5 @@ urlpatterns = [
     path('subject/', views.subject, name='subject'),
     path('topic/', views.topic, name='topic'),
     path('logout/', views.logoutView, name='logout'),
+    path('problem/', views.problem, name='problem'),
                ]

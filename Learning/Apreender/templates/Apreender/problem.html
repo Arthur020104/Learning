@@ -1,0 +1,33 @@
+{% extends "Apreender/layout.html" %}
+{% block title %}Exercicio{% endblock %}
+{% block body %}
+    {% if errorMessage %}
+        <div class="alert alert-error">{{ errorMessage }}</div>
+    {% endif %}
+    
+    <form method="POST" enctype="multipart/form-data" action="{% url 'problem' %}">
+        {% csrf_token %}
+        
+        <div class="input-group">
+            <label for="problemStatement" class="color5">Enunciado do exercício:</label>
+            <textarea name="problemStatement" id="problemStatement" maxlength="1000"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label for="topic" class="color5">Tópico:</label>
+            <select name="topic" id="topic">
+                {% for topic in topics %}
+                    <option value="{{ topic.id }}">{{ topic.subject.name }} - {{ topic.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="input-group">
+            <label for="image" class="color5">Imagem (opcional):</label>
+            <input type="file" name="image" id="image" accept=".jpg, .jpeg, .png">
+        </div>
+        
+        <button type="submit" class="btn-login">Enviar</button>
+    </form>
+
+{% endblock %}
