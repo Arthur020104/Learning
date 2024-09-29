@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Topic, Subject, User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 import datetime
 
@@ -126,6 +126,6 @@ def topic(request):
     
     return render(request, 'Apreender/topic.html', {'subjects': subjects})
 
-def logout(request):
+def logoutView(request):
     logout(request)
-    return redirect(reverse("index"))
+    return redirect(reverse("login"))
