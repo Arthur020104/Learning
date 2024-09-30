@@ -5,6 +5,7 @@
 {% block body %}
     {% if problems %}
         {% for problem in problems %}
+        <a href="/problem/{{ problem.id}}">
             <div class="problemItem">
                 <div class="problemContent">
                     <h5 class="problemName">{{ problem.topic.name}}</h5>
@@ -35,6 +36,7 @@
                     {% endif %}
                 </div>
             </div>
+        </a>
         {% endfor %}
     {% else %}
         <p>Não tem problemas</p>

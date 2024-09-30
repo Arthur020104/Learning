@@ -1,18 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
+from django.utils import timezone  # Melhor utilizar timezone se estiver usando USE_TZ
 
 class User(AbstractUser):
+    # Customizando os relacionamentos ManyToMany para evitar conflitos
+    class Meta:
+        app_label = 'Apreender'
     groups = models.ManyToManyField(
         'auth.Group',
-        related_name='custom_user_set',  # Custom related_name to avoid conflict
+        related_name='custom_user_set',
         blank=True,
         help_text='The groups this user belongs to.',
         verbose_name='groups'
     )
     user_permissions = models.ManyToManyField(
         'auth.Permission',
-        related_name='custom_user_permissions',  # Custom related_name to avoid conflict
+        related_name='custom_user_permissions',
         blank=True,
         help_text='Specific permissions for this user.',
         verbose_name='user permissions'
@@ -33,21 +37,21 @@ class Topic(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    lastSuggestion = models.DateField()  # Alterado para DateField
-    nextSuggestion = models.DateField(null=True)  # Alterado para DateField
+    lastSuggestion = models.DateField()  # Está correto usar DateField se apenas datas forem necessárias
+    nextSuggestion = models.DateField(null=True)  # Certifique-se de que não precisa de DateTimeField
     learningLevel = models.IntegerField(default=0)
     amountSuggest = models.IntegerField(default=3)
     lastSuggestedProblems = models.TextField(max_length=200, default="")
 
     def load(self):
+        # Atualiza a próxima sugestão com base no nível de aprendizado
         self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
         self.save()
 
     def suggestNext(self):
         problems_ids = self.lastSuggestedProblems.split(",")
-        if problems_ids == ['']:
-            problems_ids = []
-        
+        problems_ids = [id.strip() for id in problems_ids if id]  # Limpa espaços indesejados
+
         # Verificar se a última sugestão foi feita hoje
         if self.lastSuggestion == datetime.date.today() and problems_ids:
             problems = Problem.objects.filter(id__in=problems_ids).values()
@@ -60,7 +64,7 @@ class Topic(models.Model):
             return False, []
         
         # Buscar novos problemas e sugerir
-        problems = list(Problem.objects.filter(topic=self).order_by('?'))
+        problems = list(Problem.objects.filter(topic=self, gotIt=False).order_by('?'))
         if len(problems) <= self.amountSuggest:
             self.storeLastSuggestedProblems(problems)
             return True, problems
@@ -69,6 +73,7 @@ class Topic(models.Model):
             return True, problems[:self.amountSuggest]
     
     def storeLastSuggestedProblems(self, problems):
+        # Armazena os IDs dos problemas sugeridos
         self.lastSuggestedProblems = ",".join(str(problem.id) for problem in problems)
         self.lastSuggestion = datetime.date.today()
         self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
@@ -76,6 +81,7 @@ class Topic(models.Model):
         self.save()
 
     def getLearningLevelInDays(self):
+        # Define os intervalos de aprendizado
         learning_days = [1, 7, 14, 30, 60]
         if self.learningLevel < len(learning_days):
             return learning_days[self.learningLevel]

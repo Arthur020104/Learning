@@ -11,4 +11,5 @@ urlpatterns = [
     path('topic/', views.topic, name='topic'),
     path('logout/', views.logoutView, name='logout'),
     path('problem/', views.problem, name='problem'),
+    path('problem/<int:id>/', views.problemView, name='problemId'),
                ]

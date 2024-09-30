@@ -235,6 +235,18 @@ body {
     text-align: center;
     margin-top: 15px;
 }
+.link-default {
+    margin-top: 15px;
+    color: #f0a818;
+    text-decoration: none;
+    font-weight: bold;
+}
+.div-link {
+    text-align: left;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
 
 .register-link a, .login-link a {
     color: #f0a818;
@@ -371,4 +383,109 @@ option {
 .input-group input[type="file"]::file-selector-button:hover {
     background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
     color: #000000; /* Cor do texto ao passar o mouse */
+}
+/* Estilo do formulário escondido */
+.hiddenForm {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Botão para marcar como 'Acertou' */
+.btn-solved {
+    background-color: #f0a818; /* Mesmo estilo de botões existentes */
+    color: #000000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-solved:hover {
+    background-color: #f0f0f0; /* Mudança de cor ao passar o mouse */
+    color: #181848; /* Mudança de cor no hover */
+}
+
+
+/* Container geral da questão */
+.question-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 1000px; /* Aumentar a largura máxima */
+    background-color: #181848; /* Cor de fundo mais escura */
+    border: 2px solid #304878; /* Borda para destacar a questão */
+    border-radius: 8px;
+    color: #f0f0f0; /* Cor do texto suave */
+}
+
+/* Estilo do enunciado da questão */
+.question-statement {
+    margin-bottom: 20px;
+    font-size: 1.6em; /* Aumentado o tamanho do texto */
+    text-align: center;
+}
+
+/* Informações adicionais da questão (Matéria e Status) */
+.question-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 1.2em; /* Ajustado o tamanho para mais visibilidade */
+}
+
+.question-topic {
+    color: #7890a8; /* Tom intermediário para a matéria */
+}
+
+.question-status {
+    color: #f0a818; /* Destaque para o status */
+}
+
+/* Estilo da imagem */
+.question-image img {
+    max-width: 90%; /* Ajuste para ocupar mais espaço horizontalmente */
+    height: auto;
+    border: 2px solid #f0a818; /* Borda amarela ao redor da imagem */
+    margin: 20px 0; /* Espaçamento vertical */
+    /*center image*/
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+/* Botão "Acertou" */
+.btn-acertou {
+    background-color: #f0a818; /* Cor vibrante */
+    color: #000000;
+    padding: 12px 24px; /* Aumentado o tamanho do botão */
+    border: none;
+    border-radius: 5px;
+    font-size: 1.4em; /* Maior para ocupar mais espaço */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-acertou:hover {
+    background-color: #f0f0f0;
+    color: #181848;
+}
+
+/* Formulário da questão */
+.question-form {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+/*removendo todo estilo da tag padrao a*/
+a {
+    text-decoration: none;
+    color: #f0f0f0
+    ;
 }
