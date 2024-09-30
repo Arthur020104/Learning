@@ -6,6 +6,22 @@ Este projeto é uma plataforma que ajuda os usuários a manterem o conteúdo dec
 
 ![Home](./index.jpg)
 
+## Exercício
+
+![Exercicio](./exercicio.jpg)
+
+## Cadastro de Assunto
+
+![Assunto](assunto.jpg)
+
+## Cadastro de Tópico
+
+![Topico](./topico.jpg)
+
+## Cadastro de Exercício
+
+![CadastroExercicio](./cadastroExer.jpg)
+
 A imagem acima ilustra a página inicial do projeto, onde os usuários podem visualizar uma interface amigável para cadastrar suas matérias, acompanhar recomendações e acessar seus exercícios de revisão.
 
 ## Funcionalidades
@@ -14,15 +30,11 @@ A imagem acima ilustra a página inicial do projeto, onde os usuários podem vis
 - **Recomendações Baseadas em Aprendizado Espaçado**: O site sugere exercícios baseados no tempo ideal de revisão para otimizar a memorização.
 - **Exercícios Personalizados**: Os usuários podem resolver e revisar exercícios cadastrados.
 
-## TODO
+## Próximas Implementações
 
-- [ ] **Criar rota das páginas**: Definir e implementar as rotas do site.
-- [ ] **Criar sistema de cadastro de matéria/aula/exercício**: Permitir que o usuário adicione suas matérias e exercícios ao sistema.
-- [ ] **Criar página de cadastro de usuário**: Implementar o formulário e backend para cadastro de novos usuários.
-- [ ] **Criar página de login**: Adicionar a página de login com autenticação para os usuários.
-- [ ] **Criar página padrão de exercício**: Exibir os exercícios cadastrados pelo usuário e fornecer interatividade com os exercícios recomendados.
-- [ ] **Adicionar editor de texto para exercícios**: Permitir que os usuários escrevam e formatem seus exercícios usando um editor de texto enriquecido (WYSIWYG).
-- [ ] **Criar sistema de recomendações**: Baseado na linha do esquecimento, sugerir automaticamente revisões para os usuários.
+- **Testar página**: Verificar o funcionamento correto da página e identificar possíveis melhorias.
+- **Remover uso de caches**: Implementar a remoção do uso excessivo de caches para melhorar a performance e evitar problemas de atualização de conteúdo.
+- **Fazer página do calendário**: Criar uma página de calendário que permita ao usuário organizar suas revisões e sincronizar com calendários externos, como Google Calendar.
 
 ## Sugestões
 
