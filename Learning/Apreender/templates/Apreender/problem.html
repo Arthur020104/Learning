@@ -5,32 +5,37 @@
         <div class="alert alert-error">{{ errorMessage }}</div>
     {% endif %}
     
-    <form method="POST" enctype="multipart/form-data" action="{% url 'problem' %}">
-        {% csrf_token %}
-        
-        <div class="input-group">
-            <label for="problemStatement" class="color5">Enunciado do exercício:</label>
-            <textarea name="problemStatement" id="problemStatement" maxlength="1000"></textarea>
+    <div class="register-container">
+        <div class="register-box">
+            <h2 class="register-title">Registrar Novo Exercício</h2>
+            <form class="register-form" method="POST" enctype="multipart/form-data" action="{% url 'problem' %}">
+                {% csrf_token %}
+                
+                <div class="input-group">
+                    <label for="problemStatement">Enunciado do Exercício</label>
+                    <textarea name="problemStatement" id="problemStatement" maxlength="1000" rows="5" required></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="topic">Tópico</label>
+                    <select name="topic" id="topic" required>
+                        {% for topic in topics %}
+                            <option value="{{ topic.id }}">{{ topic.subject.name }} - {{ topic.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="div-link">
+                        <p>Cadastrar <a href="{% url 'topic' %}" class="link-default">Tópico/Aula</a></p>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="image">Imagem (opcional)</label>
+                    <input type="file" name="image" id="image" accept=".jpg, .jpeg, .png">
+                </div>
+                
+                <button type="submit" class="btn-register">Registrar</button>
+            </form>
         </div>
-
-        <div class="input-group">
-            <label for="topic" class="color5">Tópico:</label>
-            <select name="topic" id="topic">
-                {% for topic in topics %}
-                    <option value="{{ topic.id }}">{{ topic.subject.name }} - {{ topic.name }}</option>
-                {% endfor %}
-            </select>
-            <div class="div-link">
-                    <p>Cadastrar <a href="{% url 'topic' %}" class="link-default">Topico/Aula</a></p>
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label for="image" class="color5">Imagem (opcional):</label>
-            <input type="file" name="image" id="image" accept=".jpg, .jpeg, .png">
-        </div>
-        
-        <button type="submit" class="btn-login">Enviar</button>
-    </form>
+    </div>
 
 {% endblock %}
