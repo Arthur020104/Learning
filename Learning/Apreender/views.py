@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Topic, Subject, User, Problem
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import datetime
 
@@ -38,25 +39,39 @@ def index(request):
 
             # Sugerir novos problemas
             ask_for_more_problems, problems = topic.suggestNext()
+            try:
+                problems = list(problems.values())
+            except AttributeError as e:
+                print(f"Erro ao converter problemas para lista: {e}")
+                problems = None    
+            
             #print(f"Problemas sugeridos para o tópico {topic.name}: {problems}")
-            problems = problems
-            #print(problems)
             if problems:
                 # Verificação de dados de cada problema antes de adicionar à lista
+                remove = []
                 for problem in problems:
                     try:
-                        if problem['gotIt']:
+                        if problem['gotIt'] == True:
+                            print(f"Problema {problem['id']} já foi resolvido. Removendo da lista de sugestões.")
+                            remove.append(problem)
                             continue
                     except Exception as e:
                         print(f"Erro ao verificar se o problema {problem['id']} foi resolvido: {e}")
-                        continue
-                    #print("here")
-                    #print(problem)
-                    problem['topic'] = Topic.objects.get(id=problem['topic_id'])
-                    problem['subject'] = Subject.objects.get(id=problem['topic'].subject_id)
+                    except TypeError as e:
+                        print(f"Erro ao verificar se o problema {problem['id']} foi resolvido: {e}")
+                        
+                        
+                    try:
+                        problems.remove(problem)
+                    except:
+                        pass
+                    problem['topic'] = Topic.objects.get(id=problem['topic_id']).__dict__
+                    problem['subject'] = Subject.objects.get(id=problem['topic']['subject_id']).__dict__
+                    problems.append(problem)
                     ##print(f"Problema: {problem.name}, ID: {problem.id}, Tópico: {problem.topic}, Subject: {problem.subject.name}, Owner: {problem.owner.username}")
-                
-                problems_suggested_for_today.extend(problems)  # Usando extend para evitar listas aninhadas
+                for r in remove:
+                    problems.remove(r)
+                problems_suggested_for_today.extend(problems) 
 
     # Verificar o conteúdo da lista de problemas sugeridos antes de renderizar
     if not problems_suggested_for_today:
@@ -66,7 +81,7 @@ def index(request):
     return render(request, 'Apreender/index.html', {'problems': problems_suggested_for_today})
 
 
-
+@login_required
 def subject(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -86,8 +101,7 @@ def subject(request):
                 'owner_id': subject.owner_id
             })
 
-        # Quando a página de tópico estiver pronta, mude o redirecionamento para lá
-        return redirect(reverse("index"))
+        return redirect(reverse("topic"))
     
     return render(request, 'Apreender/subject.html')
 
@@ -157,7 +171,7 @@ def register(request):
     return render(request, 'Apreender/register.html')
 
 
-
+@login_required
 def topic(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -169,18 +183,17 @@ def topic(request):
         topic = Topic(name=name, description=description, subject=subject, lastSuggestion=lastSuggestion, amountSuggest=amountSuggest)
         topic.save()
         topic.load()
-        return redirect(reverse("index"))
+        return redirect(reverse("problem"))
 
-    # Carregar assuntos do usuário
     global subjectsCache
     subjects = getSubjects(User.objects.get(username=request.user.username))
     
     return render(request, 'Apreender/topic.html', {'subjects': subjects})
-
+@login_required
 def logoutView(request):
     logout(request)
     return redirect(reverse("login"))
-
+@login_required
 def problem(request):
     if request.method == 'POST':
         problemStatement = request.POST['problemStatement']
@@ -200,10 +213,10 @@ def problem(request):
     topics = Topic.objects.filter(subject__in=[subject['id'] for subject in subjectsCache[request.user.username]])
     return render(request, 'Apreender/problem.html', {'topics': topics})
 
-
+@login_required
 def problemView(request, id):
     if request.method == 'POST':
-        gotIt = request.POST['gotIt']
+        gotIt = True
         problem = Problem.objects.get(id=id)
         problem.gotIt = gotIt
         problem.save()
