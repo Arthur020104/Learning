@@ -37,15 +37,19 @@ class Topic(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    lastSuggestion = models.DateField()  # Está correto usar DateField se apenas datas forem necessárias
+    lastSuggestion = models.DateField(null=True)  # Está correto usar DateField se apenas datas forem necessárias
     nextSuggestion = models.DateField(null=True)  # Certifique-se de que não precisa de DateTimeField
     learningLevel = models.IntegerField(default=0)
     amountSuggest = models.IntegerField(default=3)
     lastSuggestedProblems = models.TextField(max_length=200, default="")
 
-    def load(self):
+    def setDefaultSuggestion(self):
         # Atualiza a próxima sugestão com base no nível de aprendizado
-        self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
+        self.lastSuggestion = datetime.date.today() - datetime.timedelta(days=1)
+        #o +1 em (days=self.getLearningLevelInDays()+1) é para compensar o -1 que é o default para o lastSuggestion entao se criamos problema no dia
+        #2 ele vai sugerir no dia 3 e inicialmente o lastSuggestion é dia 1 e o nextSuggestion é dia 3
+        self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays()+1)
+        self.learningLevel += 1
         self.save()
 
     def suggestNext(self):

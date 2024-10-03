@@ -55,10 +55,10 @@ def index(request):
             except AttributeError as e:
                 print(f"Erro ao converter problemas para lista: {e}")
                 problems = None    
-            
             #print(f"Problemas sugeridos para o tópico {topic.name}: {problems}")
             if problems:
                 # Verificação de dados de cada problema antes de adicionar à lista
+                
                 topic =  topic.__dict__
                 subject = Subject.objects.get(id=topic['subject_id']).__dict__
                 newProblems = []
@@ -69,12 +69,11 @@ def index(request):
                             continue
                     except Exception as e:
                         print(f"Erro ao verificar se o problema {problem['id']} foi resolvido: {e}")
+                        continue
                     except TypeError as e:
                         print(f"Erro ao verificar se o problema {problem['id']} foi resolvido: {e}")
-                    try:
-                        problems.remove(problem)
-                    except:
-                        pass
+                        continue
+                    
                     problem['topic'] = topic
                     problem['subject'] = subject
                     newProblems.append(problem)
@@ -83,7 +82,6 @@ def index(request):
     # Verificar o conteúdo da lista de problemas sugeridos antes de renderizar
     if not problems_suggested_for_today:
         print("Nenhum problema sugerido para hoje.")
-    print(len(problems_suggested_for_today))
     # Renderizar a página com os problemas sugeridos
     return render(request, 'Apreender/index.html', {'problems': problems_suggested_for_today})
 
@@ -175,12 +173,11 @@ def topic(request):
         name = request.POST['name']
         description = request.POST['description']
         subject = Subject.objects.get(id=request.POST['subject'])
-        lastSuggestion = datetime.date.today()
         amountSuggest = request.POST['amountSuggest']
         
-        topic = Topic(name=name, description=description, subject=subject, lastSuggestion=lastSuggestion, amountSuggest=amountSuggest)
+        topic = Topic(name=name, description=description, subject=subject, amountSuggest=amountSuggest)
         topic.save()
-        topic.load()
+        topic.setDefaultSuggestion()
         return redirect(reverse("problem"))
 
     subjects = getSubjects(User.objects.get(username=request.user.username))
