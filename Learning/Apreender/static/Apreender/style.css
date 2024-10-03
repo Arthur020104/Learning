@@ -139,15 +139,22 @@ body {
         color: #f0a818; /* Destacar a numeração com a cor amarela */
     }
 
-    /* Estilo da imagem, posicionada no canto direito */
-    .problemImage img {
-        max-width: 150px;
-        height: auto;
+    .problemImage {
+        width: 9%;
+        height: 80%; 
+        overflow: hidden; 
         position: absolute;
         right: 10px;
         top: 10px;
-        border: 2px solid #f0a818; /* Borda da imagem com cor amarela */
+        border: 2px solid #f0a818;
     }
+    
+    .problemImage img {
+        width: 100%;
+        max-width: none; 
+        object-fit: cover;
+    }
+    
 
     /* Ajustes responsivos */
     @media (max-width: 600px) {

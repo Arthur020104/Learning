@@ -19,6 +19,7 @@
                 <div class="input-group">
                     <label for="topic">Tópico</label>
                     <select name="topic" id="topic" required>
+                        <option value="" disabled selected>Selecione um tópico</option>
                         {% for topic in topics %}
                             <option value="{{ topic.id }}">{{ topic.subject.name }} - {{ topic.name }}</option>
                         {% endfor %}
