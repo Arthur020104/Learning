@@ -50,8 +50,10 @@ class Topic(models.Model):
 
     def suggestNext(self):
         problems_ids = self.lastSuggestedProblems.split(",")
-        problems_ids = [id.strip() for id in problems_ids if id]  # Limpa espaços indesejados
-
+        if len(problems_ids) > 0 and problems_ids[0] != "":
+            problems_ids = [id.strip() for id in problems_ids if id]  # Limpa espaços indesejados
+        else:
+            problems_ids = None
         # Verificar se a última sugestão foi feita hoje
         if self.lastSuggestion == datetime.date.today() and problems_ids:
             problems = Problem.objects.filter(id__in=problems_ids).values()
@@ -82,10 +84,10 @@ class Topic(models.Model):
 
     def getLearningLevelInDays(self):
         # Define os intervalos de aprendizado
-        learning_days = [1, 7, 14, 30, 60]
+        learning_days = [1, 1, 2, 30, 60]# fast learning will be back to [1, 3, 7, 14, 30]
         if self.learningLevel < len(learning_days):
             return learning_days[self.learningLevel]
-        return 365 * (5 ** (self.learningLevel // 5))
+        return 120 * (self.learningLevel - 4)
 
     def getDaysLeftToSuggest(self):
         if self.nextSuggestion:

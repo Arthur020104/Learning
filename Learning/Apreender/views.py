@@ -7,18 +7,33 @@ from django.urls import reverse
 import datetime
 
 # Dicionário para armazenar cache por usuário
-subjectsCache = {}
+cache = {}
 
 def getSubjects(user):
-    global subjectsCache
-    # Verificar se já existe cache para o usuário atual
-    if user.username not in subjectsCache:
-        subjects = Subject.objects.filter(owner=user)
-        # Armazenar os dados dos assuntos em formato de lista
-        subjectsCache[user.username] = list(subjects.values())
-    return subjectsCache[user.username]
+    if not user.username:
+        return []
+    global  cache
+
+    user_cache = cache.get(user.username, {'subjects': []})
+    
+    if user_cache['subjects'] and len(user_cache['subjects']) >= Subject.objects.filter(owner=user).count():
+        return user_cache['subjects']
+
+    subjects = Subject.objects.filter(owner=user)
+    user_cache['subjects'] = list(subjects.values())
+    
+
+    cache[user.username] = user_cache
+
+    return user_cache['subjects']
+
+#create a getTopics function and cache it
+
+
 
 def index(request):
+    global cache
+    print(cache)
     if request.user.is_anonymous:
         return render(request, 'Apreender/index.html', {'problems': []})
     user = User.objects.get(username=request.user.username)
@@ -32,10 +47,6 @@ def index(request):
     for subject in subjects:
         topics = Topic.objects.filter(subject=subject['id'])
         for topic in topics:
-            # Ajustando a próxima sugestão caso necessário
-            if topic.nextSuggestion is None or topic.id == 1:
-                topic.nextSuggestion = datetime.date.today()
-                topic.save()
 
             # Sugerir novos problemas
             ask_for_more_problems, problems = topic.suggestNext()
@@ -48,35 +59,31 @@ def index(request):
             #print(f"Problemas sugeridos para o tópico {topic.name}: {problems}")
             if problems:
                 # Verificação de dados de cada problema antes de adicionar à lista
-                remove = []
+                topic =  topic.__dict__
+                subject = Subject.objects.get(id=topic['subject_id']).__dict__
+                newProblems = []
                 for problem in problems:
                     try:
                         if problem['gotIt'] == True:
                             print(f"Problema {problem['id']} já foi resolvido. Removendo da lista de sugestões.")
-                            remove.append(problem)
                             continue
                     except Exception as e:
                         print(f"Erro ao verificar se o problema {problem['id']} foi resolvido: {e}")
                     except TypeError as e:
                         print(f"Erro ao verificar se o problema {problem['id']} foi resolvido: {e}")
-                        
-                        
                     try:
                         problems.remove(problem)
                     except:
                         pass
-                    problem['topic'] = Topic.objects.get(id=problem['topic_id']).__dict__
-                    problem['subject'] = Subject.objects.get(id=problem['topic']['subject_id']).__dict__
-                    problems.append(problem)
+                    problem['topic'] = topic
+                    problem['subject'] = subject
+                    newProblems.append(problem)
                     ##print(f"Problema: {problem.name}, ID: {problem.id}, Tópico: {problem.topic}, Subject: {problem.subject.name}, Owner: {problem.owner.username}")
-                for r in remove:
-                    problems.remove(r)
-                problems_suggested_for_today.extend(problems) 
-
+                problems_suggested_for_today.extend(newProblems) 
     # Verificar o conteúdo da lista de problemas sugeridos antes de renderizar
     if not problems_suggested_for_today:
         print("Nenhum problema sugerido para hoje.")
-
+    print(len(problems_suggested_for_today))
     # Renderizar a página com os problemas sugeridos
     return render(request, 'Apreender/index.html', {'problems': problems_suggested_for_today})
 
@@ -91,15 +98,6 @@ def subject(request):
         subject = Subject(name=name, description=description, owner=owner)
         subject.save()
 
-        # Atualizar o cache do usuário
-        global subjectsCache
-        if owner.username in subjectsCache:
-            subjectsCache[owner.username].append({
-                'id': subject.id,
-                'name': subject.name,
-                'description': subject.description,
-                'owner_id': subject.owner_id
-            })
 
         return redirect(reverse("topic"))
     
@@ -185,7 +183,6 @@ def topic(request):
         topic.load()
         return redirect(reverse("problem"))
 
-    global subjectsCache
     subjects = getSubjects(User.objects.get(username=request.user.username))
     
     return render(request, 'Apreender/topic.html', {'subjects': subjects})
@@ -206,11 +203,9 @@ def problem(request):
         problem = Problem(problemStatement=problemStatement, topic=topic, gotIt=gotIt, image=image)
         problem.save()
         return redirect(reverse("index"))
-    global subjectsCache
-    if not request.user.username in subjectsCache.keys():
-        getSubjects(User.objects.get(username=request.user.username))
-    #get topics that are in the cached user subjects
-    topics = Topic.objects.filter(subject__in=[subject['id'] for subject in subjectsCache[request.user.username]])
+    
+    subjects = getSubjects(User.objects.get(username=request.user.username))
+    topics = Topic.objects.filter(subject__in=[subject['id'] for subject in subjects])
     return render(request, 'Apreender/problem.html', {'topics': topics})
 
 @login_required
