@@ -100,6 +100,19 @@ class Topic(models.Model):
     
     def __str__(self):
         return f"{self.name} - Description: {self.description} - Subject: {self.subject}"
+class TopicImages(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    
+    def __str__(self):
+        return f"Image url:{self.image.url} - Topic: {self.topic}"
+class TopicHtml(models.Model):#this is for each piece of html in the topic can have many htmls
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    html = models.TextField(max_length=15000)
+    order = models.IntegerField(null=False)
+    isImage = models.BooleanField()
+    def __str__(self):
+        return f"Html: {self.html} - Topic: {self.topic}"
 
 class Problem(models.Model):
     problemStatement = models.TextField(max_length=1000)

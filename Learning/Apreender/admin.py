@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Subject, Topic, Problem
+from .models import User, Subject, Topic, Problem, TopicHtml, TopicImages
 
 # Register your models here
 @admin.register(User)
@@ -15,7 +15,7 @@ class SubjectAdmin(admin.ModelAdmin):
 
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ('name', 'subject', 'lastSuggestion', 'nextSuggestion', 'learningLevel')
+    list_display = ('name', 'subject', 'lastSuggestion', 'nextSuggestion', 'learningLevel', 'id')
     search_fields = ('name', 'subject__name')
     list_filter = ('subject',)
 
@@ -24,3 +24,13 @@ class ProblemAdmin(admin.ModelAdmin):
     list_display = ('problemStatement', 'topic', 'gotIt')
     search_fields = ('problemStatement', 'topic__name')
     list_filter = ('topic', 'gotIt')
+@admin.register(TopicHtml)
+class TopicHtmlAdmin(admin.ModelAdmin):
+    list_display = ('topic', 'order', 'isImage')
+    search_fields = ('topic__name', 'order')
+    list_filter = ('topic', 'isImage')
+@admin.register(TopicImages)
+class TopicImagesAdmin(admin.ModelAdmin):
+    list_display = ('topic', 'image')
+    search_fields = ('topic__name', 'image')
+    list_filter = ('topic',)
