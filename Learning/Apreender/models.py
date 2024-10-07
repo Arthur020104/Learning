@@ -1,22 +1,23 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
-from django.utils import timezone  # Melhor utilizar timezone se estiver usando USE_TZ
+from django.utils import timezone  # Better to use timezone if USE_TZ is enabled
 
 class User(AbstractUser):
-    # Customizando os relacionamentos ManyToMany para evitar conflitos
     class Meta:
         app_label = 'Apreender'
+    
+    # Customizing ManyToMany relationships to avoid conflicts
     groups = models.ManyToManyField(
         'auth.Group',
-        related_name='custom_user_set',
+        related_name='customUserSet',
         blank=True,
         help_text='The groups this user belongs to.',
         verbose_name='groups'
     )
-    user_permissions = models.ManyToManyField(
+    userPermissions = models.ManyToManyField(
         'auth.Permission',
-        related_name='custom_user_permissions',
+        related_name='customUserPermissions',
         blank=True,
         help_text='Specific permissions for this user.',
         verbose_name='user permissions'
@@ -37,39 +38,39 @@ class Topic(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    lastSuggestion = models.DateField(null=True)  # Está correto usar DateField se apenas datas forem necessárias
-    nextSuggestion = models.DateField(null=True)  # Certifique-se de que não precisa de DateTimeField
+    lastSuggestion = models.DateField(null=True)  # Correct to use DateField if only dates are needed
+    nextSuggestion = models.DateField(null=True)  # Ensure you don't need DateTimeField
     learningLevel = models.IntegerField(default=0)
     amountSuggest = models.IntegerField(default=3)
     lastSuggestedProblems = models.TextField(max_length=200, default="")
 
     def setDefaultSuggestion(self):
-        # Atualiza a próxima sugestão com base no nível de aprendizado
+        # Update the next suggestion based on the learning level
         self.lastSuggestion = datetime.date.today() - datetime.timedelta(days=1)
-        #o +1 em (days=self.getLearningLevelInDays()+1) é para compensar o -1 que é o default para o lastSuggestion entao se criamos problema no dia
-        #2 ele vai sugerir no dia 3 e inicialmente o lastSuggestion é dia 1 e o nextSuggestion é dia 3
-        self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays()+1)
+        # The +1 in (days=self.getLearningLevelInDays()+1) compensates for the -1 default in lastSuggestion.
+        self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays() + 1)
         self.learningLevel += 1
         self.save()
 
     def suggestNext(self):
-        problems_ids = self.lastSuggestedProblems.split(",")
-        if len(problems_ids) > 0 and problems_ids[0] != "":
-            problems_ids = [id.strip() for id in problems_ids if id]  # Limpa espaços indesejados
+        problemIds = self.lastSuggestedProblems.split(",")
+        if len(problemIds) > 0 and problemIds[0] != "":
+            problemIds = [id.strip() for id in problemIds if id]  # Clean unwanted spaces
         else:
-            problems_ids = None
-        # Verificar se a última sugestão foi feita hoje
-        if self.lastSuggestion == datetime.date.today() and problems_ids:
-            problems = Problem.objects.filter(id__in=problems_ids).values()
+            problemIds = None
+
+        # Check if the last suggestion was made today
+        if self.lastSuggestion == datetime.date.today() and problemIds:
+            problems = Problem.objects.filter(id__in=problemIds).values()
             if problems.exists():
                 return False, problems
             return False, []
-        
-        # Verificar se é cedo para sugerir novos problemas
+
+        # Check if it's too early to suggest new problems
         if self.getDaysLeftToSuggest() > 0:
             return False, []
-        
-        # Buscar novos problemas e sugerir
+
+        # Fetch new problems and suggest
         problems = list(Problem.objects.filter(topic=self, gotIt=False).order_by('?'))
         if len(problems) <= self.amountSuggest:
             self.storeLastSuggestedProblems(problems)
@@ -77,9 +78,9 @@ class Topic(models.Model):
         else:
             self.storeLastSuggestedProblems(problems[:self.amountSuggest])
             return True, problems[:self.amountSuggest]
-    
+
     def storeLastSuggestedProblems(self, problems):
-        # Armazena os IDs dos problemas sugeridos
+        # Store the IDs of the suggested problems
         self.lastSuggestedProblems = ",".join(str(problem.id) for problem in problems)
         self.lastSuggestion = datetime.date.today()
         self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
@@ -87,10 +88,10 @@ class Topic(models.Model):
         self.save()
 
     def getLearningLevelInDays(self):
-        # Define os intervalos de aprendizado
-        learning_days = [1, 1, 2, 30, 60]# fast learning will be back to [1, 3, 7, 14, 30]
-        if self.learningLevel < len(learning_days):
-            return learning_days[self.learningLevel]
+        # Define learning intervals
+        learningDays = [1, 1, 2, 30, 60]  # Fast learning will be back to [1, 3, 7, 14, 30]
+        if self.learningLevel < len(learningDays):
+            return learningDays[self.learningLevel]
         return 120 * (self.learningLevel - 4)
 
     def getDaysLeftToSuggest(self):
@@ -100,19 +101,23 @@ class Topic(models.Model):
     
     def __str__(self):
         return f"{self.name} - Description: {self.description} - Subject: {self.subject}"
+
 class TopicImages(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     
     def __str__(self):
-        return f"Image url:{self.image.url} - Topic: {self.topic}"
-class TopicHtml(models.Model):#this is for each piece of html in the topic can have many htmls
+        return f"Image URL: {self.image.url} - Topic: {self.topic}"
+
+class TopicHtml(models.Model):
+    # This is for each piece of HTML in the topic, can have many HTML entries
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     html = models.TextField(max_length=15000)
     order = models.IntegerField(null=False)
     isImage = models.BooleanField()
+    
     def __str__(self):
-        return f"Html: {self.html} - Topic: {self.topic}"
+        return f"HTML: {self.html} - Topic: {self.topic}"
 
 class Problem(models.Model):
     problemStatement = models.TextField(max_length=1000)
