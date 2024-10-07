@@ -16,7 +16,7 @@
         <!-- Exibir imagem, se houver -->
         {% if problem.image %}
             <div class="question-image">
-                <img src="http://127.0.0.1:8000/media/{{ problem.image }}" alt="Imagem do problema">
+                <img src="{{webSiteLink}}/media/{{ problem.image }}" alt="Imagem do problema">
             </div>
         {% endif %}
 
