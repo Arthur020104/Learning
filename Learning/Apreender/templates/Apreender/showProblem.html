@@ -2,18 +2,15 @@
 {% block title %}Pagina do Exercicio{% endblock %}
 {% block body %}
     <div class="question-container">
-        <!-- Enunciado do problema -->
         <div class="question-statement">
             <h1>{{ problem.problemStatement }}</h1>
         </div>
 
-        <!-- Informações adicionais (Matéria e Status) -->
         <div class="question-info">
             <span class="question-topic">{{ problem.topic.name }}</span>
             <span class="question-status">Status: {{ problem.gotIt|yesno:"Acertou,Não acertou" }}</span>
         </div>
 
-        <!-- Exibir imagem, se houver -->
         {% if problem.image %}
             <div class="question-image">
                 <img src="{{webSiteLink}}/media/{{ problem.image }}" alt="Imagem do problema">

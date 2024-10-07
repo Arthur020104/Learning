@@ -11,7 +11,6 @@
             <form class="register-form" method="POST" enctype="multipart/form-data" action="{% url 'topic' %}">
                 {% csrf_token %}
 
-                <!-- Formulário de Registro de Tópico -->
                 <div class="input-group">
                     <label for="name">Nome do Tópico</label>
                     <input type="text" id="name" name="name" maxlength="100" required>
@@ -33,9 +32,8 @@
                     <input type="number" id="amountSuggest" name="amountSuggest" value="3" min="1" required>
                 </div>
 
-                <!-- Formulário de Registro de Conteúdo Dinâmico -->
+
                 <div id="dynamic-content">
-                    <!-- Parágrafos e Imagens serão adicionados aqui -->
                 </div>
 
                 <div class="input-group">
