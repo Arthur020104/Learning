@@ -1,31 +1,28 @@
-    /* Paleta de cores */
-    .color1 { color: #000000; }
-    .color2 { color: #7890a8; }
-    .color3 { color: #304878; }
-    .color4 { color: #181848; }
-    .color5 { color: #f0a818; }
-    /* Estilo do Header */
+.color1 { color: #000000; }
+.color2 { color: #7890a8; }
+.color3 { color: #304878; }
+.color4 { color: #181848; }
+.color5 { color: #f0a818; }
 
 body {
     margin: 0;
     padding: 0;
 }
+
 .header {
-    background-color: #181848; /* Cor do fundo */
-    padding: 15px 0; /* Espaçamento vertical dentro do header */
-    border-bottom: 2px solid #304878; /* Barra separadora do body */
-    margin-top: 0 !important; /* Remove qualquer margem superior */
-    margin-bottom: 30px; /* Aumenta a distância entre o header e o restante do body */
+    background-color: #181848;
+    padding: 15px 0;
+    border-bottom: 2px solid #304878;
+    margin-top: 0 !important;
+    margin-bottom: 30px;
 }
 
-/* Estilo da Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* Estilo da lista de links */
 .nav-links {
     list-style: none;
     padding: 0;
@@ -34,7 +31,6 @@ body {
     width: 100%;
 }
 
-/* Estilo para os itens individuais (links) */
 .nav-item {
     flex-grow: 1;
     text-align: center;
@@ -46,7 +42,6 @@ body {
     border-right: none;
 }
 
-/* Estilo dos links */
 .nav-link {
     color: #f0f0f0;
     text-decoration: none;
@@ -60,12 +55,11 @@ body {
     color: #f0a818;
 }
 
-/* Ajustes responsivos */
 @media (max-width: 600px) {
     .navbar {
         flex-direction: column;
     }
-    
+
     .nav-item {
         border-right: none;
         border-bottom: 1px solid #304878;
@@ -76,109 +70,100 @@ body {
     }
 }
 
-    /* Estilo da div do item do problema */
+.problemItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border: 1px solid #304878;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
+    position: relative;
+    min-height: 150px;
+    background-color: #304878;
+}
+
+body {
+    background-color: #181848;
+    color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.problemContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-right: 160px;
+}
+
+.problemName {
+    font-size: 1.4em;
+    margin-top: 2%;
+    margin-bottom: 1%;
+    color: #f0f0f0;
+}
+
+.problemMateria {
+    display: inline-block;
+    margin-right: 4px;
+    color: #7890a8;
+}
+
+.problemMatInfo {
+    display: inline-block!important;
+    padding: 0px!important;
+}
+
+.problemInfo {
+    display: inline-block;
+    color: #f0f0f0;
+}
+
+.problemOwner {
+    margin-top: 4px;
+    font-size: 0.7em;
+    color: #f0a818;
+}
+
+.problemImage {
+    width: 9%;
+    height: 80%; 
+    overflow: hidden;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border: 2px solid #f0a818;
+}
+
+.problemImage img {
+    width: 100%;
+    max-width: none;
+    object-fit: cover;
+}
+
+@media (max-width: 600px) {
     .problemItem {
-        display: flex;
-        justify-content: space-between;
-        padding: 15px;
-        border: 1px solid #304878; /* Cor intermediária para a borda */
-        border-radius: 5px;
-        margin-bottom: 15px;
-        margin-right: 15px;
-        margin-left: 15px;
-        position: relative;
-        min-height: 150px;
-        background-color: #304878; /* Cor de fundo mais clara que o fundo geral */
-    }
-
-    /* Fundo da página com a cor mais escura */
-    body {
-        background-color: #181848; /* Cor mais escura para o fundo da página */
-        color: #f0f0f0; /* Cor branca suave para o texto */
-        font-family: Arial, sans-serif;
-    }
-
-    /* Estilo do conteúdo do problema */
-    .problemContent {
-        display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        padding-right: 160px; /* Espaço para a imagem */
+        align-items: flex-start;
     }
 
-    /* Estilo para o nome do problema */
-    .problemName {
-        font-size: 1.4em;
-        margin-top: 2%;
-        margin-bottom: 1%;
-        color: #f0f0f0; /* Texto branco suave */
-    }
-
-    /* Estilo da matéria e numeração, ambos na mesma linha com espaçamento de 4px */
-    .problemMateria {
-        display: inline-block;
-        margin-right: 4px;
-        color: #7890a8; /* Tom intermediário mais suave */
-    }
-
-    .problemMatInfo {
-        display: inline-block!important;
-        padding: 0px!important;
-    }
-
-    /* Numeração ao lado da matéria */
-    .problemInfo {
-        display: inline-block;
-        color: #f0f0f0;/* Texto branco suave */
-    }
-
-    /* Estilo do nome do dono com espaçamento vertical igual à distância entre matéria e numeração */
-    .problemOwner {
-        margin-top: 4px;
-        font-size: 0.7em;
-        color: #f0a818; /* Destacar a numeração com a cor amarela */
-    }
-
-    .problemImage {
-        width: 9%;
-        height: 80%; 
-        overflow: hidden; 
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        border: 2px solid #f0a818;
-    }
-    
     .problemImage img {
-        width: 100%;
-        max-width: none; 
-        object-fit: cover;
+        position: static;
+        margin-top: 10px;
     }
-    
+}
 
-    /* Ajustes responsivos */
-    @media (max-width: 600px) {
-        .problemItem {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .problemImage img {
-            position: static;
-            margin-top: 10px;
-        }
-    }
-/* Container Principal */
 .login-container, .register-container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #181848; /* Fundo mais escuro */
+    background-color: #181848;
 }
 
 .login-box, .register-box {
-    background-color: #304878; /* Fundo mais claro para as caixas */
+    background-color: #304878;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -186,16 +171,14 @@ body {
     max-width: 400px;
 }
 
-/* Títulos */
 .login-title, .register-title {
-    color: #f0f0f0; /* Texto branco suave */
+    color: #f0f0f0;
     text-align: center;
     margin-bottom: 20px;
     font-size: 1.8em;
     font-weight: bold;
 }
 
-/* Formulário */
 .login-form, .register-form {
     display: flex;
     flex-direction: column;
@@ -221,9 +204,8 @@ body {
     font-size: 1em;
 }
 
-/* Botões */
 .btn-login, .btn-register {
-    background-color: #f0a818; /* Botão com cor vibrante */
+    background-color: #f0a818;
     color: #000000;
     padding: 10px;
     border: none;
@@ -234,26 +216,26 @@ body {
 }
 
 .btn-login:hover, .btn-register:hover {
-    background-color: #f0f0f0; /* Leve mudança de cor no hover */
+    background-color: #f0f0f0;
 }
 
-/* Links de navegação */
 .register-link, .login-link {
     text-align: center;
     margin-top: 15px;
 }
+
 .link-default {
     margin-top: 15px;
     color: #f0a818;
     text-decoration: none;
     font-weight: bold;
 }
+
 .div-link {
     text-align: left;
     margin-top: 15px;
     font-weight: bold;
 }
-
 
 .register-link a, .login-link a {
     color: #f0a818;
@@ -264,7 +246,7 @@ body {
 .register-link a:hover, .login-link a:hover {
     text-decoration: underline;
 }
-/* Container de Alerta Padrão */
+
 .alert {
     padding: 20px;
     border-radius: 8px;
@@ -272,54 +254,50 @@ body {
     font-size: 1.2em;
     font-weight: bold;
     position: relative;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #f0f0f0; /* Cor de texto */
-    border-left: 8px solid; /* Borda lateral mais espessa */
+    color: #f0f0f0;
+    border-left: 8px solid;
 }
 
-/* Estilo do Alerta de Sucesso */
 .alert-success {
-    background-color: #304878; /* Azul escuro */
-    border-left-color: #f0a818; /* Borda lateral amarela */
+    background-color: #304878;
+    border-left-color: #f0a818;
 }
 
-/* Estilo do Alerta de Erro */
 .alert-error {
-    background-color: #181848; /* Cor mais escura */
-    border-left-color: #f0a818; /* Borda lateral amarela */
+    background-color: #181848;
+    border-left-color: #f0a818;
 }
 
-/* Estilo do Alerta de Aviso */
 .alert-warning {
-    background-color: #7890a8; /* Azul claro */
-    border-left-color: #f0a818; /* Borda lateral amarela */
+    background-color: #7890a8;
+    border-left-color: #f0a818;
 }
 
-/* Estilo do Alerta de Informação */
 .alert-info {
-    background-color: #304878; /* Azul escuro */
-    border-left-color: #7890a8; /* Azul claro */
+    background-color: #304878;
+    border-left-color: #7890a8;
 }
 
-/* Ícone de Fechar */
 .alert .close-btn {
     background: transparent;
     border: none;
-    font-size: 1.5em; /* Ícone maior */
+    font-size: 1.5em;
     color: #f0f0f0;
     cursor: pointer;
     padding: 0;
-    opacity: 0.8; /* Ícone mais opaco inicialmente */
+    opacity: 0.8;
     transition: opacity 0.2s ease, color 0.3s ease;
 }
 
 .alert .close-btn:hover {
     color: #f0a818;
-    opacity: 1; /* Totalmente visível no hover */
+    opacity: 1;
 }
+
 input, textarea {
     background-color: #7890a8;
     color: #000000;
@@ -328,79 +306,78 @@ input, textarea {
     border: none;
     width: 100%;
 }
-textarea 
-{
+
+textarea {
     font-size: 1.5em!important;
 }
 
-/* Estilo para o campo select */
+
 select {
-    background-color: #7890a8; /* Cor de fundo do select */
-    color: #000000; /* Cor do texto */
-    padding: 10px; /* Espaçamento interno */
-    border-radius: 5px; /* Bordas arredondadas */
-    border: none; /* Remove a borda padrão */
-    font-size: 1em; /* Tamanho do texto */
-    width: 100%; /* Ocupa toda a largura disponível */
-    appearance: none; /* Remove a seta padrão do select */
+    background-color: #7890a8;
+    color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1em;
+    width: 100%;
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><polygon points="0,0 140,0 70,70" fill="%23000000"/></svg>'); /* Adiciona uma seta personalizada */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><polygon points="0,0 140,0 70,70" fill="%23000000"/></svg>');
     background-repeat: no-repeat;
-    background-position: right 10px center; /* Posiciona a seta à direita */
-    background-size: 10px; /* Tamanho da seta */
+    background-position: right 10px center;
+    background-size: 10px;
 }
 
 select:hover {
-    background-color: #f0a818; /* Cor de fundo ao passar o mouse */
-    color: #000000; /* Mantém a cor do texto */
+    background-color: #f0a818;
+    color: #000000;
 }
 
 select:focus {
-    outline: none; /* Remove a borda de foco padrão */
-    box-shadow: 0 0 5px #f0a818; /* Adiciona um leve brilho ao focar */
+    outline: none;
+    box-shadow: 0 0 5px #f0a818;
 }
 
 option {
-    background-color: #7890a8; /* Cor de fundo das opções */
-    color: #000000; /* Cor do texto nas opções */
+    background-color: #7890a8;
+    color: #000000;
 }
-/* Estilo para o input file */
+
 .input-group input[type="file"] {
-    background-color: #7890a8; /* Cor de fundo para manter a consistência */
-    color: #000000; /* Cor do texto */
-    padding: 10px; /* Espaçamento interno */
-    border-radius: 5px; /* Bordas arredondadas */
-    border: none; /* Remove a borda padrão */
-    font-size: 1em; /* Tamanho do texto */
-    cursor: pointer; /* Cursor em formato de mão para indicar interatividade */
+    background-color: #7890a8;
+    color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1em;
+    cursor: pointer;
 }
 
 .input-group input[type="file"]::file-selector-button {
-    background-color: #f0a818; /* Cor de fundo do botão do seletor de arquivo */
-    color: #000000; /* Cor do texto do botão */
-    padding: 10px 20px; /* Espaçamento interno para o botão */
-    border: none; /* Remove a borda padrão */
-    border-radius: 5px; /* Bordas arredondadas */
-    font-size: 1em; /* Tamanho do texto */
-    cursor: pointer; /* Cursor em formato de mão para o botão */
-    transition: background-color 0.3s ease; /* Suavização da transição ao passar o mouse */
+    background-color: #f0a818;
+    color: #000000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .input-group input[type="file"]::file-selector-button:hover {
-    background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
-    color: #000000; /* Cor do texto ao passar o mouse */
+    background-color: #f0f0f0;
+    color: #000000;
 }
-/* Estilo do formulário escondido */
+
 .hiddenForm {
     display: flex;
     justify-content: center;
     margin-top: 20px;
 }
 
-/* Botão para marcar como 'Acertou' */
 .btn-solved {
-    background-color: #f0a818; /* Mesmo estilo de botões existentes */
+    background-color: #f0a818;
     color: #000000;
     padding: 10px 20px;
     border: none;
@@ -411,70 +388,62 @@ option {
 }
 
 .btn-solved:hover {
-    background-color: #f0f0f0; /* Mudança de cor ao passar o mouse */
-    color: #181848; /* Mudança de cor no hover */
+    background-color: #f0f0f0;
+    color: #181848;
 }
 
-
-/* Container geral da questão */
 .question-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 30px auto;
     padding: 20px;
-    max-width: 1000px; /* Aumentar a largura máxima */
-    background-color: #181848; /* Cor de fundo mais escura */
-    border: 2px solid #304878; /* Borda para destacar a questão */
+    max-width: 1000px;
+    background-color: #181848;
+    border: 2px solid #304878;
     border-radius: 8px;
-    color: #f0f0f0; /* Cor do texto suave */
+    color: #f0f0f0;
 }
 
-/* Estilo do enunciado da questão */
 .question-statement {
     margin-bottom: 20px;
-    font-size: 1.6em; /* Aumentado o tamanho do texto */
+    font-size: 1.6em;
     text-align: center;
 }
 
-/* Informações adicionais da questão (Matéria e Status) */
 .question-info {
     display: flex;
     justify-content: space-between;
     width: 100%;
     margin-bottom: 20px;
-    font-size: 1.2em; /* Ajustado o tamanho para mais visibilidade */
+    font-size: 1.2em;
 }
 
 .question-topic {
-    color: #7890a8; /* Tom intermediário para a matéria */
+    color: #7890a8;
 }
 
 .question-status {
-    color: #f0a818; /* Destaque para o status */
+    color: #f0a818;
 }
 
-/* Estilo da imagem */
 .question-image img {
-    max-width: 90%; /* Ajuste para ocupar mais espaço horizontalmente */
+    max-width: 90%;
     height: auto;
-    border: 2px solid #f0a818; /* Borda amarela ao redor da imagem */
-    margin: 20px 0; /* Espaçamento vertical */
-    /*center image*/
+    border: 2px solid #f0a818;
+    margin: 20px 0;
     display: block;
     margin-left: auto;
     margin-right: auto;
-
 }
 
-/* Botão "Acertou" */
 .btn-acertou {
-    background-color: #f0a818; /* Cor vibrante */
+    background-color: #f0a818;
     color: #000000;
-    padding: 12px 24px; /* Aumentado o tamanho do botão */
+    padding: 12px 24px;
     border: none;
     border-radius: 5px;
-    font-size: 1.4em; /* Maior para ocupar mais espaço */
+    font-size: 1.4em;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -484,15 +453,24 @@ option {
     color: #181848;
 }
 
-/* Formulário da questão */
 .question-form {
     width: 100%;
     text-align: center;
     margin-top: 20px;
 }
-/*removendo todo estilo da tag padrao a*/
+
 a {
     text-decoration: none;
-    color: #f0f0f0
-    ;
+    color: #f0f0f0;
+}
+
+.btn, button {
+    background-color: #f0a818;
+    color: #000000;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.05em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }

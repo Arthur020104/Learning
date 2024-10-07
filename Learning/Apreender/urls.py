@@ -12,4 +12,5 @@ urlpatterns = [
     path('logout/', views.logoutView, name='logout'),
     path('problem/', views.problem, name='problem'),
     path('problem/<int:id>/', views.problemView, name='problemId'),
+    path('topic/<int:id>/', views.topicView, name='topicView'), 
                ]

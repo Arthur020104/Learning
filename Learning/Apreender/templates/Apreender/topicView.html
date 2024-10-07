@@ -1,0 +1,17 @@
+{% extends "Apreender/layout.html" %}
+{% block title %}Pagina do Exercicio{% endblock %}
+{% block body %}
+    <div class="question-container">
+        <!-- Enunciado do problema -->
+        <div class="question-statement">
+            <h1>Titulo do topico</h1>
+        </div>
+
+        
+        <div class="question-info">
+            <span class="question-status">Drop down list of problems</span><!-- jinga for it like for problem in problems -->
+        </div>
+        <!--Html code coming in dinamicly-->
+        {{fullHtml|safe}}       
+    </div>
+{% endblock %}
