@@ -7,7 +7,7 @@
         </div>
 
         <div class="question-info">
-            <span class="question-topic">{{ problem.topic.name }}</span>
+            <span class="question-topic"><a href="{{webSiteLink}}/topic/{{problem.topic.id}}">{{ problem.topic.name }}</a></span>
             <span class="question-status">Status: {{ problem.gotIt|yesno:"Acertou,Não acertou" }}</span>
         </div>
 

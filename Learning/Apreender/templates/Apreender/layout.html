@@ -13,8 +13,14 @@
     <nav class="navbar">
         <ul class="nav-links">
             {% if user.is_authenticated %}
-                <li class="nav-item"><a href="{% url 'problem'%}" class="nav-link">Cadastrar Exercício</a></li>
-                <li class="nav-item"><a href="% url 'calendar'%}" class="nav-link">Calendário</a></li>
+                <!--Se estiver na pagina de exercicio link para home-->
+                {% if request.path == '/problem/' %}
+                    <li class="nav-item"><a href="{% url 'index'%}" class="nav-link">Home</a></li>
+                {% else %}
+                    <li class="nav-item"><a href="{% url 'problem'%}" class="nav-link">Cadastrar Exercício</a></li>
+                {% endif %}
+               
+                <li class="nav-item"><a href="{% url 'subjectsList'%}" class="nav-link">Lista de Assuntos</a></li>
                 <li class="nav-item"><a href="{% url 'logout'%}" class="nav-link">Logout</a></li>
             {% else %}
                 <li class="nav-item"><a href="{% url 'login'%}" class="nav-link">Login</a></li>

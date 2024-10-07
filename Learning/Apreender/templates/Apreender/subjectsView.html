@@ -1,0 +1,20 @@
+{% extends "Apreender/layout.html" %}
+{% load static %}
+{% block title %}Página de Subjects{% endblock %}
+{% block body %}
+    {% for subject in subjects %}
+    <div class="dropdown-container-subjects">
+        <h1 class="subject-title-subjects">{{ subject.name }}</h1>
+        <div class="dropdown-subjects">
+            <button class="dropdown-button-subjects">{{ subject.name }}</button>
+            <div class="dropdown-content-subjects">
+                {% for topic in subject.topics %}
+                    <a href="{% url 'topicView' topic.id %}">
+                        {{ topic.name|truncatechars:50 }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

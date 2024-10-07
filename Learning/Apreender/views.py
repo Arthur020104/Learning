@@ -251,7 +251,7 @@ def topicView(request, id):
     contentItems = TopicHtml.objects.filter(topic=topic).order_by('order')
     
     if not contentItems:
-        return redirect(reverse("registerTopicContent", args=[id]))
+        return redirect(reverse("subjectsList"))
 
     fullHtml = ""
     for item in contentItems:
@@ -268,3 +268,11 @@ def topicView(request, id):
     topicProblems = Problem.objects.filter(topic=topic)
     print(f"Complete HTML: {fullHtml}")
     return render(request, 'Apreender/topicView.html', {'topic': topic, 'fullHtml': fullHtml, 'problems': topicProblems})
+
+@login_required
+def subjectsView(request):
+    subjects = getSubjects(User.objects.get(username=request.user.username))
+    for subject in subjects:
+        subject['topics'] = Topic.objects.filter(subject=subject['id'])
+    print(subjects)
+    return render(request, 'Apreender/subjectsView.html', {'subjects': subjects})

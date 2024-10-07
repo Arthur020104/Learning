@@ -530,3 +530,71 @@ a {
     background-color: #5a6268;
     border-radius: 1px;
 }
+
+
+.dropdown-container-subjects {
+    display: flex;
+    flex-direction: column; /* Coloca itens em coluna */
+    align-items: center; /* Centraliza horizontalmente */
+    margin-top: 20px; /* Margem superior para espaçamento */
+}
+
+.subject-title-subjects {
+    text-align: center; /* Centraliza o texto do título */
+    color: #f0f0f0; /* Cor do texto, ajuste conforme necessário */
+    margin-bottom: 10px; /* Espaçamento entre o título e o dropdown */
+}
+
+.dropdown-subjects {
+    position: relative;
+    display: flex; /* Usar flex para centralizar */
+    justify-content: center; /* Centraliza o botão */
+    width: 100%; /* Faz o botão preencher a largura disponível */
+}
+
+.dropdown-button-subjects {
+    padding: 10px 16px;
+    font-size: 1.05em;
+    border: none;
+    cursor: pointer;
+    text-align: center; /* Centraliza o texto */
+    width: 30%; /* Garante que o botão ocupe 30% da largura do container */
+}
+
+.dropdown-content-subjects {
+    display: none;
+    position: absolute;
+    background-color: #181848;
+    min-width: 30%; /* Faz o dropdown ter o mesmo tamanho do botão */
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border: 1px solid #304878;
+}
+
+.dropdown-content-subjects a {
+    color: #f0f0f0;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid #f0a818;
+    text-align: center; /* Centraliza o texto dos links */
+    transition: background-color 0.3s ease;
+    padding: 10px;
+    font-size: 1.05em;
+    cursor: pointer;
+}
+
+.dropdown-content-subjects a:hover {
+    background-color: #f0a818;  
+    color: #000000;
+}
+
+.dropdown-subjects:hover .dropdown-content-subjects {
+    display: block;
+}
+
+.dropdown-subjects:hover .dropdown-button-subjects {
+    background-color: #5a6268;
+    border-radius: 1px;
+}
+
+
