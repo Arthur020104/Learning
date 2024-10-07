@@ -1,14 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Topic, Subject, User, Problem
+from .models import Topic, Subject, User, Problem, TopicHtml, TopicImages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import datetime
+import json
+
 
 # Dicionário para armazenar cache por usuário
 cache = {}
-
+WEBSITELINK = "http://127.0.0.1:8000"
 def getSubjects(user):
     if not user.username:
         return []
@@ -83,7 +85,7 @@ def index(request):
     if not problems_suggested_for_today:
         print("Nenhum problema sugerido para hoje.")
     # Renderizar a página com os problemas sugeridos
-    return render(request, 'Apreender/index.html', {'problems': problems_suggested_for_today})
+    return render(request, 'Apreender/index.html', {'problems': problems_suggested_for_today, 'webSiteLink': WEBSITELINK})
 
 
 @login_required
@@ -167,22 +169,86 @@ def register(request):
     return render(request, 'Apreender/register.html')
 
 
+
 @login_required
 def topic(request):
     if request.method == 'POST':
-        name = request.POST['name']
-        description = request.POST['description']
-        subject = Subject.objects.get(id=request.POST['subject'])
-        amountSuggest = request.POST['amountSuggest']
-        
-        topic = Topic(name=name, description=description, subject=subject, amountSuggest=amountSuggest)
-        topic.save()
-        topic.setDefaultSuggestion()
-        return redirect(reverse("problem"))
+        # Verificação dos campos obrigatórios
+        required_fields = ['name', 'description', 'subject', 'amountSuggest']
+        for field in required_fields:
+            if not request.POST.get(field):
+                return HttpResponse(f"Erro: Campo '{field}' está faltando.", status=400)
 
-    subjects = getSubjects(User.objects.get(username=request.user.username))
-    
-    return render(request, 'Apreender/topic.html', {'subjects': subjects})
+        try:
+            # Primeiro, registrar o tópico
+            name = request.POST['name']
+            description = request.POST['description']
+            subject = Subject.objects.get(id=request.POST['subject'])
+            amountSuggest = int(request.POST['amountSuggest'])  # Validação de tipo inteiro
+
+            topic = Topic(name=name, description=description, subject=subject, amountSuggest=amountSuggest)
+            topic.save()
+            topic.setDefaultSuggestion()
+
+            # Agora, registrar o conteúdo do tópico
+            # Remover conteúdo anterior, se já existir
+            TopicHtml.objects.filter(topic=topic).delete()
+            TopicImages.objects.filter(topic=topic).delete()
+
+            for key, value in request.POST.items():
+                if key.startswith('paragraph'):
+                    orderKey = f'order-{key}'
+                    order = request.POST.get(orderKey)
+                    if order is None:
+                        return HttpResponse(f"Erro: Campo 'order' está faltando para o parágrafo '{key}'.", status=400)
+
+                    # Cadastrar o parágrafo no modelo TopicHtml
+                    TopicHtml.objects.create(
+                        topic=topic,
+                        html=value,
+                        order=int(order),
+                        isImage=False
+                    )
+                elif key.startswith('order-paragraph'):
+                    continue
+                elif key.startswith('order-image'):
+                    orderKey = key
+                    imageKey = f'image-{value}'
+                    image = request.FILES.get(imageKey)
+                    if image is None:
+                        return HttpResponse(f"Erro: Imagem '{imageKey}' está faltando.", status=400)
+                    order = value
+                    if order is None:
+                        return HttpResponse("Erro: Campo 'order' está faltando para a imagem.", status=400)
+
+                    # Cadastrar a imagem no modelo TopicImages
+                    imageInstance = TopicImages.objects.create(
+                        topic=topic,
+                        image=image
+                    )
+                    # Cadastrar a referência à imagem no modelo TopicHtml para preservar a ordem
+                    TopicHtml.objects.create(
+                        topic=topic,
+                        html=imageInstance.image.url,
+                        order=int(order),
+                        isImage=True
+                    )
+
+            # Redirecionando para a página do tópico
+            return redirect(reverse("topicView", args=[topic.id]))
+
+        except Subject.DoesNotExist:
+            return HttpResponse("Erro: Assunto não encontrado.", status=404)
+
+        except ValueError:
+            return HttpResponse("Erro: O campo 'amountSuggest' deve ser um número inteiro.", status=400)
+
+    # Caso seja um GET, carrega o formulário
+    subjects = Subject.objects.all()  # Supondo que há um modelo de Assunto
+    return render(request, 'Apreender/topic.html', {
+        'subjects': subjects,
+    })
+
 @login_required
 def logoutView(request):
     logout(request)
@@ -199,7 +265,7 @@ def problem(request):
         
         problem = Problem(problemStatement=problemStatement, topic=topic, gotIt=gotIt, image=image)
         problem.save()
-        return redirect(reverse("index"))
+        return redirect(reverse("problem"))
     
     subjects = getSubjects(User.objects.get(username=request.user.username))
     topics = Topic.objects.filter(subject__in=[subject['id'] for subject in subjects])
@@ -218,4 +284,31 @@ def problemView(request, id):
     print(problem)
     problem['topic'] = Topic.objects.get(id=problem['topic_id'])
     problem['subject'] = Subject.objects.get(id=problem['topic'].subject_id)
-    return render(request, 'Apreender/showProblem.html', {'problem': problem})
+    return render(request, 'Apreender/showProblem.html', {'problem': problem, 'webSiteLink': WEBSITELINK})
+
+@login_required
+def topicView(request, id):
+    topic = get_object_or_404(Topic, id=id)
+    
+    # Buscar todos os conteúdos HTML (parágrafos e imagens) relacionados ao tópico, ordenados
+    contentItems = TopicHtml.objects.filter(topic=topic).order_by('order')
+    if contentItems is None:
+        return redirect(reverse("registerTopicContent", args=[id]))
+    
+    fullHtml = ""
+    for item in contentItems:
+        if item.isImage:
+            html = f"""
+                    <div class="question-image">
+                        <img src="{WEBSITELINK}{item.html}" alt="Imagem do problema">
+                    </div>
+                    """
+            fullHtml += html
+        else:
+            html = f"""
+                    <p>{item.html}</p>
+                    """    
+            fullHtml += html 
+    print(f"HTML completo: {fullHtml}")
+    return render(request, 'Apreender/topicView.html', {'topic': topic, 'fullHtml': fullHtml})
+            
