@@ -1,15 +1,24 @@
 {% extends "Apreender/layout.html" %}
-{% block title %}Pagina do Exercicio{% endblock %}
+{% load static %}
+{% block title %}Página do Tópico{% endblock %}
 {% block body %}
+
     <div class="question-container">
         <div class="question-statement">
-            <h1>Titulo do topico</h1>
+            <h1>{{ topic.name }}</h1>
         </div>
-
         
-        <div class="question-info">
-            <span class="question-status">Drop down list of problems</span>
+        <div class="dropdown">
+            <button class="dropdown-button">Problemas relacionados</button>
+            <div class="dropdown-content">
+                {% for problem in problems %}
+                    <a href="{% url 'problemId' problem.id %}">
+                        {{ problem.problemStatement|truncatechars:50 }}
+                    </a>
+                {% endfor %}
+            </div>
         </div>
-        {{fullHtml|safe}}       
+            {{fullHtml|safe}}
     </div>
+
 {% endblock %}

@@ -419,9 +419,14 @@ option {
     font-size: 1.2em;
 }
 
-.question-topic {
+.question-topic  a{
     color: #7890a8;
 }
+.question-topic a:hover{
+    color: #f0a818;
+    text-decoration: underline;
+}
+
 
 .question-status {
     color: #f0a818;
@@ -473,4 +478,55 @@ a {
     font-size: 1.05em;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%; /* Faz o botão preencher a largura disponível */
+}
+
+.dropdown-button {
+    padding: 10px 16px;
+    font-size: 1.05em;
+    border: none;
+    cursor: pointer;
+    text-align: center; /* Centraliza o texto */
+    width: 30%; /* Garante que o botão ocupe 100% da largura do container */
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #181848;
+    min-width: 30%; /* Faz o dropdown ter o mesmo tamanho do botão */
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border: 1px solid #304878;
+}
+
+.dropdown-content  a {
+    color: #f0f0f0;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid #f0a818;
+    text-align: center; /* Centraliza o texto dos links */
+    transition: background-color 0.3s ease;
+    padding: 10px;
+    font-size: 1.05em;
+    cursor: pointer;
+}
+
+.dropdown-content a:hover {
+    background-color: #f0a818;  
+    color: #000000;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    
+}
+
+.dropdown:hover .dropdown-button {
+    background-color: #5a6268;
+    border-radius: 1px;
 }

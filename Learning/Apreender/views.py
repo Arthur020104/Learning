@@ -265,6 +265,6 @@ def topicView(request, id):
         else:
             html = f"<p>{item.html}</p>"
             fullHtml += html
-
+    topicProblems = Problem.objects.filter(topic=topic)
     print(f"Complete HTML: {fullHtml}")
-    return render(request, 'Apreender/topicView.html', {'topic': topic, 'fullHtml': fullHtml})
+    return render(request, 'Apreender/topicView.html', {'topic': topic, 'fullHtml': fullHtml, 'problems': topicProblems})
