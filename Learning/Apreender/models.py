@@ -89,10 +89,10 @@ class Topic(models.Model):
 
     def getLearningLevelInDays(self):
         # Define learning intervals
-        learningDays = [1, 1, 2, 30, 60]  # Fast learning will be back to [1, 3, 7, 14, 30]
+        learningDays = [1, 3, 7, 14, 30] 
         if self.learningLevel < len(learningDays):
             return learningDays[self.learningLevel]
-        return 120 * (self.learningLevel - 4)
+        return int(60 ** (self.learningLevel/5) - (( (self.learningLevel - 5)/5)**2))
 
     def getDaysLeftToSuggest(self):
         if self.nextSuggestion:
