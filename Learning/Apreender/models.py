@@ -120,10 +120,11 @@ class TopicHtml(models.Model):
         return f"HTML: {self.html} - Topic: {self.topic}"
 
 class Problem(models.Model):
-    problemStatement = models.TextField(max_length=1000)
+    problemName = models.TextField(max_length=500)
+    problemStatement = models.TextField(max_length=10000, blank=True, null=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     gotIt = models.BooleanField()
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     
     def __str__(self):
-        return f"Problem: {self.problemStatement} - Topic: {self.topic}"
+        return f"Problem: {self.problemName} - Topic: {self.topic}"
