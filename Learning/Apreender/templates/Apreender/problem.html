@@ -12,10 +12,14 @@
                 {% csrf_token %}
                 
                 <div class="input-group">
-                    <label for="problemStatement">Enunciado do Exercício</label>
-                    <textarea name="problemStatement" id="problemStatement" maxlength="1000" rows="5" required></textarea>
+                    <label for="problemName">Nome do Exercicio</label>
+
+                    <textarea name="problemName" id="problemName" maxlength="500" rows="1" required></textarea>
                 </div>
-                
+                <div class="input-group">
+                    <label for="problemStatement">Enunciado do problema</label>
+                    <textarea name="problemStatement" id="problemStatement" maxlength="10000" rows="5" required></textarea>
+                </div>
                 <div class="input-group">
                     <label for="topic">Tópico</label>
                     <select name="topic" id="topic" required>

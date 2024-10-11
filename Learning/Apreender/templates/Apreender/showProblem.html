@@ -3,8 +3,13 @@
 {% block body %}
     <div class="question-container">
         <div class="question-statement">
-            <h1>{{ problem.problemStatement }}</h1>
+            <h1>{{ problem.problemName }}</h1>
         </div>
+        {% if problem.problemStatement %}
+
+            {{problem.problemStatement|safe}}
+            
+        {% endif %}
 
         <div class="question-info">
             <span class="question-topic"><a href="{{webSiteLink}}/topic/{{problem.topic.id}}">{{ problem.topic.name }}</a></span>

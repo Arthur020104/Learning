@@ -216,12 +216,13 @@ def logoutView(request):
 @login_required
 def problem(request):
     if request.method == 'POST':
+        problemName = request.POST['problemName']
         problemStatement = request.POST['problemStatement']
         topic = Topic.objects.get(id=request.POST['topic'])
         gotIt = False
         image = request.FILES.get('image')
 
-        problem = Problem(problemStatement=problemStatement, topic=topic, gotIt=gotIt, image=image)
+        problem = Problem(problemName=problemName, topic=topic, gotIt=gotIt, image=image, problemStatement=problemStatement)
         problem.save()
         return redirect(reverse("problem"))
 

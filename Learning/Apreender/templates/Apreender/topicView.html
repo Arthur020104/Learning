@@ -13,7 +13,7 @@
             <div class="dropdown-content">
                 {% for problem in problems %}
                     <a href="{% url 'problemId' problem.id %}">
-                        {{ problem.problemStatement|truncatechars:50 }}
+                        {{ problem.problemName|truncatechars:50 }}
                     </a>
                 {% endfor %}
             </div>
