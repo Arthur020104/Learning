@@ -3,7 +3,10 @@
 .color3 { color: #304878; }
 .color4 { color: #181848; }
 .color5 { color: #f0a818; }
-
+p
+{
+    font-size: 1.3em;
+}
 body {
     margin: 0;
     padding: 0;
@@ -598,3 +601,4 @@ a {
 }
 
 
+/*classes para o usuario usar na criacao de pagina, disponibilizar um documento de como usar html, css in line e mostrar classes feitas para o usuario*/

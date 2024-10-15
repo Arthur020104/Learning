@@ -14,7 +14,7 @@
         <ul class="nav-links">
             {% if user.is_authenticated %}
                 <!--Se estiver na pagina de exercicio link para home-->
-                {% if request.path == '/problem/' %}
+                {% if request.path != '/' %}
                     <li class="nav-item"><a href="{% url 'index'%}" class="nav-link">Home</a></li>
                 {% else %}
                     <li class="nav-item"><a href="{% url 'problem'%}" class="nav-link">Cadastrar Exercício</a></li>
