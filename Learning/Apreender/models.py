@@ -44,27 +44,30 @@ class Topic(models.Model):
     amountSuggest = models.IntegerField(default=3)
     lastSuggestedProblems = models.TextField(max_length=200, default="")
 
-    def setDefaultSuggestion(self):
-        # Update the next suggestion based on the learning level
-        self.lastSuggestion = datetime.date.today() - datetime.timedelta(days=1)
-        # The +1 in (days=self.getLearningLevelInDays()+1) compensates for the -1 default in lastSuggestion.
-        self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays() + 1)
-        self.learningLevel += 1
-        self.save()
 
+    def setDefaultSuggestion(self):
+        #check if both last and next are null
+        if not self.lastSuggestion and not self.nextSuggestion:
+            # Update the next suggestion based on the learning level
+            self.lastSuggestion = datetime.date.today() - datetime.timedelta(days=1)
+            # The +1 in (days=self.getLearningLevelInDays()+1) compensates for the -1 default in lastSuggestion.
+            self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays() + 1)
+            self.learningLevel += 1
+        self.save()
     def suggestNext(self):
-        problemIds = self.lastSuggestedProblems.split(",")
-        if len(problemIds) > 0 and problemIds[0] != "":
-            problemIds = [id.strip() for id in problemIds if id]  # Clean unwanted spaces
-        else:
-            problemIds = None
+
 
         # Check if the last suggestion was made today
-        if self.lastSuggestion == datetime.date.today() and problemIds:
-            problems = Problem.objects.filter(id__in=problemIds).values()
-            if problems.exists():
-                return False, problems
-            return False, []
+        if self.lastSuggestion == self.suggestionDate(self):
+            # Get problems suggested today
+            problemIds = self.lastSuggestedProblems.split(",")
+            problemIds = [id.strip() for id in problemIds if id] 
+            
+            if len(problemIds) > 0 and problemIds[0] != "":
+                problems = Problem.objects.filter(id__in=problemIds).values()
+                if problems.exists():
+                    return False, problems
+                return False, []
 
         # Check if it's too early to suggest new problems
         if self.getDaysLeftToSuggest() > 0:
@@ -75,30 +78,43 @@ class Topic(models.Model):
         if len(problems) <= self.amountSuggest:
             self.storeLastSuggestedProblems(problems)
             return True, problems
-        else:
-            self.storeLastSuggestedProblems(problems[:self.amountSuggest])
-            return True, problems[:self.amountSuggest]
-
+        
+        self.storeLastSuggestedProblems(problems[:self.amountSuggest])
+        return True, problems[:self.amountSuggest]
+    
     def storeLastSuggestedProblems(self, problems):
+
         # Store the IDs of the suggested problems
         self.lastSuggestedProblems = ",".join(str(problem.id) for problem in problems)
-        self.lastSuggestion = datetime.date.today()
-        self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
-        self.learningLevel += 1
         self.save()
 
     def getLearningLevelInDays(self):
+
         # Define learning intervals
-        learningDays = [1, 3, 7, 14, 30] 
+        learningDays = [1, 7, 14, 30] 
         if self.learningLevel < len(learningDays):
             return learningDays[self.learningLevel]
-        return int(60 ** (self.learningLevel/5) - (( (self.learningLevel - 5)/5)**2))
+        return int(60 ** (self.learningLevel/4) - (( (self.learningLevel - 4)/4)**2))
 
     def getDaysLeftToSuggest(self):
+
         if self.nextSuggestion:
             return (self.nextSuggestion - datetime.date.today()).days
         return 0
     
+    def suggestionDate(self):
+        if self.nextSuggestion <= datetime.date.today():
+            self.lastSuggestion = datetime.date.today()
+            self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
+            self.learningLevel += 1
+            self.save()
+            return True
+
+        if self.lastSuggestion == datetime.date.today():
+            return True
+        
+        return False
+
     def __str__(self):
         return f"{self.name} - Description: {self.description} - Subject: {self.subject}"
 
