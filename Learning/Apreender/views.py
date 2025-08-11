@@ -29,42 +29,23 @@ def index(request):
 
     user = User.objects.get(username=request.user.username)
     subjects = getSubjects(user)
-    problemsSuggestedForToday = []
+    subjectTopicsToSuggest = []
 
     for subject in subjects:
+        
         topics = Topic.objects.filter(subject=subject['id'])
-        for topic in topics:
-            askForMoreProblems, problems = topic.suggestNext()
+        
+        #filter topics that have a suggestion for today
+        topics = [topic for topic in topics if topic.suggestionDate()]
 
-            try:
-                problems = list(problems.values())
-            except AttributeError as e:
-                print(f"Error converting problems to list: {e}")
-                problems = None
+        subjectTopic = {'subject': subject['name'], 'topics': topics}
+        if topics:
+            subjectTopicsToSuggest.append(subjectTopic)
 
-            if problems:
-                topic = topic.__dict__
-                subject = Subject.objects.get(id=topic['subject_id']).__dict__
-                newProblems = []
-                
-                for problem in problems:
-                    try:
-                        if problem['gotIt'] is True:
-                            continue
-                    except Exception as e:
-                        print(f"Error checking if problem {problem['id']} is solved: {e}")
-                        continue
-                    
-                    problem['topic'] = topic
-                    problem['subject'] = subject
-                    newProblems.append(problem)
+    if not subjectTopicsToSuggest:
+        print("No topics suggested for today.")
 
-                problemsSuggestedForToday.extend(newProblems)
-
-    if not problemsSuggestedForToday:
-        print("No problems suggested for today.")
-
-    return render(request, 'Apreender/index.html', {'problems': problemsSuggestedForToday, 'webSiteLink': WEBSITE_LINK})
+    return render(request, 'Apreender/index.html', {'subjectTopics': subjectTopicsToSuggest, 'webSiteLink': WEBSITE_LINK})
 
 @login_required
 def subject(request):
@@ -193,7 +174,14 @@ def topic(request):
                         order=int(order),
                         isImage=True
                     )
-
+            #check if has any page, if does not create an empty one
+            if not TopicHtml.objects.filter(topic=topic).exists():
+                TopicHtml.objects.create(
+                    topic=topic,
+                    html="",
+                    order=0,
+                    isImage=False
+                )
             return redirect(reverse("topicView", args=[topic.id]))
 
         except Subject.DoesNotExist:

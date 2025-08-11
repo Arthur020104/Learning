@@ -3,6 +3,7 @@
 .color3 { color: #304878; }
 .color4 { color: #181848; }
 .color5 { color: #f0a818; }
+.color6 { color: #f0f0f0!important; }
 p
 {
     font-size: 1.3em;
@@ -226,14 +227,65 @@ body {
     text-align: center;
     margin-top: 15px;
 }
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 1.2em;
+    height: 1.2em;
+    border: 2px solid #7890a8;
+    border-radius: 4px;
+    background-color: transparent;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+input[type="checkbox"]:hover {
+    border-color: #f0a818;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #f0a818;
+    border-color: #f0a818;
+}
+
+input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 0.6em;
+    top: 0.3em;
+    width: 0.25em;
+    height: 0.5em;
+    border: solid #181848;
+    border-width: 0 0.18em 0.18em 0;
+    transform: rotate(45deg);
+}
+
+input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #304878;
+}
 
 .link-default {
-    margin-top: 15px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
     color: #f0a818;
     text-decoration: none;
     font-weight: bold;
 }
-
+.link-default:hover {
+    text-decoration: underline;
+}
+li
+{
+    /*removing dot from list items*/
+    list-style-type: none!important;
+}
 .div-link {
     text-align: left;
     margin-top: 15px;
@@ -602,3 +654,43 @@ a {
 
 
 /*classes para o usuario usar na criacao de pagina, disponibilizar um documento de como usar html, css in line e mostrar classes feitas para o usuario*/
+
+.subject-container {
+    background-color: #304878;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.subject-container h2 {
+    color: #f0a818;
+    border-bottom: 2px solid #7890a8;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+.topic-list {
+    list-style: none;
+    padding: 0;
+}
+
+.topic-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #181848;
+    transition: background-color 0.2s;
+}
+
+.topic-item:last-child {
+    border-bottom: none;
+}
+
+.topic-item:hover {
+    background-color: #181848;
+}
+
+.topic-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}

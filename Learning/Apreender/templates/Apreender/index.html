@@ -1,44 +1,26 @@
 {% extends "Apreender/layout.html" %}
-
+{% load static %}
 {% block title %}Home Page{% endblock %}
-
 {% block body %}
-    {% if problems %}
-        {% for problem in problems %}
-        <a href="/problem/{{ problem.id}}">
-            <div class="problemItem">
-                <div class="problemContent">
-                    <h5 class="problemName">{{ problem.topic.name}}</h5>
-                    <div class="problemMatInfo">
-                        {% if problem.subject %}
-                            <p class="problemMateria">{{ problem.topic.subject.name }}</p>
-                        {% else %}
-                            <p class="problemMateria">Materia não disponível</p>
-                        {% endif %}
-                        
-                        {% if problem.topic %}
-                            <p class="problemInfo">{{ forloop.counter }}/{{ problem.topic.amountSuggest }}</p>
-                        {% else %}
-                            <p class="problemInfo">Quantidade de sugestões não disponível</p>
-                        {% endif %}
-                    </div>
-                    {% if problem.subject and problem.subject.owner %}
-                        <p class="problemOwner">{{ problem.subject.owner.username }}</p>
-                    {% else %}
-                        <p class="problemOwner">Proprietário não disponível</p>
-                    {% endif %}
-                </div>
-                <div class="problemImage">
-                    {% if problem.image %}
-                        <img src="{{webSiteLink}}/media/{{ problem.image }}" alt="Imagem do problema">
-                    {% else %}
-                        <p>Imagem não disponível</p>
-                    {% endif %}
-                </div>
+
+    {% if subjectTopics %}
+        {% for subject in subjectTopics %}
+            <div class="subject-container">
+                <h2 class="color6">{{ subject.subject }}</h2>
+                <ul class="topic-list">
+                    {% for topic in subject.topics %}
+                        <li class="topic-item">
+                            <label class="topic-label">
+                                <input type="checkbox" name="subscribe" class="" value="yes" id="topic-{{ topic.id }}">
+                                <a href="{% url 'topicView' topic.id %}" class="link-default">{{ topic.name }}</a>
+                            </label>
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
-        </a>
         {% endfor %}
     {% else %}
         <p>Não tem problemas</p>
     {% endif %}
+    <script src="{% static 'Apreender/indexScript.js' %}"></script>
 {% endblock %}
