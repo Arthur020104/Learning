@@ -12,13 +12,13 @@
         {% endif %}
 
         <div class="question-info">
-            <span class="question-topic"><a href="{{webSiteLink}}/topic/{{problem.topic.id}}">{{ problem.topic.name }}</a></span>
+            <span class="question-topic"><a href="{% url 'topicView' problem.topic.id %}">{{ problem.topic.name }}</a></span>
             <span class="question-status">Status: {{ problem.gotIt|yesno:"Acertou,Não acertou" }}</span>
         </div>
 
         {% if problem.image %}
             <div class="question-image">
-                <img src="{{webSiteLink}}/media/{{ problem.image }}" alt="Imagem do problema">
+                <img src="/media/{{ problem.image }}" alt="Imagem do problema">
             </div>
         {% endif %}
 
@@ -28,4 +28,19 @@
             <button type="submit" class="btn-acertou">Acertou!</button>
         </form>
     </div>
+
+     <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          tags: 'ams'
+        },
+        options: {
+
+          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 {% endblock %}

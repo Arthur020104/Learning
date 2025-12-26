@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         paragraphGroup.classList.add('input-group');
         paragraphGroup.innerHTML = `
             <label for="paragraph-${contentCount}">Parágrafo</label>
-            <textarea id="paragraph-${contentCount}" name="paragraph-${contentCount}" maxlength="15000" rows="4" required></textarea>
+            <textarea id="paragraph-${contentCount}" name="paragraph-${contentCount}" maxlength="9999999" rows="8" required></textarea>
             <input type="hidden" name="order-paragraph-${contentCount}" value="${contentCount}">
             <button type="button" class="btn-remove" onclick="this.parentElement.remove()">Remover</button>
         `;

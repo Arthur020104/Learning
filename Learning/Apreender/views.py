@@ -36,7 +36,7 @@ def index(request):
         topics = Topic.objects.filter(subject=subject['id'])
         
         #filter topics that have a suggestion for today
-        topics = [topic for topic in topics if topic.suggestionDate()]
+        topics = [topic for topic in topics if topic.shouldSuggestToday()]
 
         subjectTopic = {'subject': subject['name'], 'topics': topics}
         if topics:
@@ -223,8 +223,7 @@ def problem(request):
 def problemView(request, id):
     if request.method == 'POST':
         problem = Problem.objects.get(id=id)
-        problem.gotIt = True
-        problem.save()
+        problem.solved()
         return redirect(reverse("index"))
 
     problem = Problem.objects.get(id=id).__dict__
@@ -247,7 +246,7 @@ def topicView(request, id):
         if item.isImage:
             html = f"""
                     <div class="question-image">
-                        <img src="{WEBSITE_LINK}{item.html}" alt="Problem image">
+                        <img src="{item.html}" alt="Problem image">
                     </div>
                     """
             fullHtml += html

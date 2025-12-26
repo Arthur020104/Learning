@@ -54,20 +54,6 @@ class Topic(models.Model):
             self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays() + 1)
             self.learningLevel += 1
         self.save()
-    def suggestNext(self):
-
-
-        # Check if the last suggestion was made today
-        if self.lastSuggestion == self.suggestionDate(self):
-            # Get problems suggested today
-            problemIds = self.lastSuggestedProblems.split(",")
-            problemIds = [id.strip() for id in problemIds if id] 
-            
-            if len(problemIds) > 0 and problemIds[0] != "":
-                problems = Problem.objects.filter(id__in=problemIds).values()
-                if problems.exists():
-                    return False, problems
-                return False, []
 
         # Check if it's too early to suggest new problems
         if self.getDaysLeftToSuggest() > 0:
@@ -91,10 +77,10 @@ class Topic(models.Model):
     def getLearningLevelInDays(self):
 
         # Define learning intervals
-        learningDays = [1, 7, 14, 30] 
+        learningDays = [1, 4, 8, 16, 35] 
         if self.learningLevel < len(learningDays):
             return learningDays[self.learningLevel]
-        return int(60 ** (self.learningLevel/4) - (( (self.learningLevel - 4)/4)**2))
+        return int(65 ** (self.learningLevel/len(learningDays)) - (( (self.learningLevel - len(learningDays))/len(learningDays))**2))
 
     def getDaysLeftToSuggest(self):
 
@@ -102,11 +88,22 @@ class Topic(models.Model):
             return (self.nextSuggestion - datetime.date.today()).days
         return 0
     
-    def suggestionDate(self):
+    def updateSuggestion(self):
+      nextSuggestion = self.lastSuggestion + datetime.timedelta(days = self.getLearningLevelInDays())
+      wasSuggestionProvidedToday = self.lastSuggestion and self.lastSuggestion.date() == datetime.date.today() if hasattr(self.lastSuggestion, 'date') else self.lastSuggestion == datetime.date.today()
+      hasSuggestionBeenUpdated = self.nextSuggestion == nextSuggestion and wasSuggestionProvidedToday
+      
+      if hasSuggestionBeenUpdated or not wasSuggestionProvidedToday:
+          return
+
+      self.nextSuggestion = nextSuggestion
+      self.learningLevel += 1
+      self.save()
+    
+    def shouldSuggestToday(self):
         if self.nextSuggestion <= datetime.date.today():
             self.lastSuggestion = datetime.date.today()
-            self.nextSuggestion = self.lastSuggestion + datetime.timedelta(days=self.getLearningLevelInDays())
-            self.learningLevel += 1
+            self.nextSuggestion = datetime.date.today() + datetime.timedelta(days = 1)
             self.save()
             return True
 
@@ -128,7 +125,7 @@ class TopicImages(models.Model):
 class TopicHtml(models.Model):
     # This is for each piece of HTML in the topic, can have many HTML entries
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    html = models.TextField(max_length=15000)
+    html = models.TextField(max_length=9999999)
     order = models.IntegerField(null=False)
     isImage = models.BooleanField()
     
@@ -137,10 +134,15 @@ class TopicHtml(models.Model):
 
 class Problem(models.Model):
     problemName = models.TextField(max_length=500)
-    problemStatement = models.TextField(max_length=10000, blank=True, null=True)
+    problemStatement = models.TextField(max_length=1000000, blank=True, null=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     gotIt = models.BooleanField()
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     
+    def solved(self):
+      self.gotIt = True
+      self.topic.updateSuggestion()
+      self.save()
+      self.topic.save()
     def __str__(self):
         return f"Problem: {self.problemName} - Topic: {self.topic}"
