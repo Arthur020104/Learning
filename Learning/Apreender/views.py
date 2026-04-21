@@ -4,24 +4,23 @@ from .models import Topic, Subject, User, Problem, TopicHtml, TopicImages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-
-cache = {}
-WEBSITE_LINK = "http://127.0.0.1:8000"
+from django.core.cache import cache
 
 def getSubjects(user):
     if not user.username:
         return []
 
-    userCache = cache.get(user.username, {'subjects': []})
+    cacheKey = f"subjects_user_{user.username}"
+    userSubjects = cache.get(cacheKey)
 
-    if userCache['subjects'] and len(userCache['subjects']) >= Subject.objects.filter(owner=user).count():
-        return userCache['subjects']
+    if userSubjects is not None and len(userSubjects) >= Subject.objects.filter(owner=user).count():
+        return userSubjects
 
     subjects = Subject.objects.filter(owner=user)
-    userCache['subjects'] = list(subjects.values())
-    cache[user.username] = userCache
+    userSubjects = list(subjects.values())
+    cache.set(cacheKey, userSubjects, 3600)  # Cache for 1 hour
 
-    return userCache['subjects']
+    return userSubjects
 
 def index(request):
     if request.user.is_anonymous:
@@ -45,7 +44,7 @@ def index(request):
     if not subjectTopicsToSuggest:
         print("No topics suggested for today.")
 
-    return render(request, 'Apreender/index.html', {'subjectTopics': subjectTopicsToSuggest, 'webSiteLink': WEBSITE_LINK})
+    return render(request, 'Apreender/index.html', {'subjectTopics': subjectTopicsToSuggest})
 
 @login_required
 def subject(request):
@@ -209,7 +208,6 @@ def problem(request):
         topic = Topic.objects.get(id=request.POST['topic'])
         gotIt = False
         image = request.FILES.get('image')
-
         problem = Problem(problemName=problemName, topic=topic, gotIt=gotIt, image=image, problemStatement=problemStatement)
         problem.save()
         return redirect(reverse("problem"))
@@ -226,11 +224,8 @@ def problemView(request, id):
         problem.solved()
         return redirect(reverse("index"))
 
-    problem = Problem.objects.get(id=id).__dict__
-    print(problem)
-    problem['topic'] = Topic.objects.get(id=problem['topic_id'])
-    problem['subject'] = Subject.objects.get(id=problem['topic'].subject_id)
-    return render(request, 'Apreender/showProblem.html', {'problem': problem, 'webSiteLink': WEBSITE_LINK})
+    problem = Problem.objects.get(id=id)
+    return render(request, 'Apreender/showProblem.html', {'problem': problem})
 
 
 @login_required
@@ -254,7 +249,6 @@ def topicView(request, id):
             html = f"<p>{item.html}</p>"
             fullHtml += html
     topicProblems = Problem.objects.filter(topic=topic)
-    print(f"Complete HTML: {fullHtml}")
     return render(request, 'Apreender/topicView.html', {'topic': topic, 'fullHtml': fullHtml, 'problems': topicProblems})
 
 @login_required
@@ -262,5 +256,4 @@ def subjectsView(request):
     subjects = getSubjects(User.objects.get(username=request.user.username))
     for subject in subjects:
         subject['topics'] = Topic.objects.filter(subject=subject['id'])
-    print(subjects)
     return render(request, 'Apreender/subjectsView.html', {'subjects': subjects})

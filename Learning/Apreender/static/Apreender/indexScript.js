@@ -9,12 +9,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         //on load set state
-        checkbox.checked = localStorage.getItem(checkbox.id) === 'true';
+        const checkboxState = localStorage.getItem(checkbox.id);
+        if (checkboxState) {
+            const { checked, validUntil } = JSON.parse(checkboxState);
+            if (Date.now() < validUntil)
+                checkbox.checked = checked;
+            else 
+                localStorage.removeItem(checkbox.id);
+        }
 
     });
 });
 
 function saveCheckBoxStateToCache(checkBox)
 {
-    localStorage.setItem(checkBox.id, checkBox.checked);
+    localStorage.setItem(checkBox.id, JSON.stringify({checked: checkBox.checked, validUntil: Date.now() + 24 * 60 * 60 * 1000})); 
 }

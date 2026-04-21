@@ -11,11 +11,17 @@ document.addEventListener('DOMContentLoaded', function () {
         paragraphGroup.classList.add('input-group');
         paragraphGroup.innerHTML = `
             <label for="paragraph-${contentCount}">Parágrafo</label>
-            <textarea id="paragraph-${contentCount}" name="paragraph-${contentCount}" maxlength="9999999" rows="8" required></textarea>
+            <input type="hidden" name="paragraph-${contentCount}" id="paragraph-${contentCount}Input">
+            <div id="paragraph-${contentCount}" class="quill-editor-container" rows="8"></div>
             <input type="hidden" name="order-paragraph-${contentCount}" value="${contentCount}">
             <button type="button" class="btn-remove" onclick="this.parentElement.remove()">Remover</button>
         `;
         dynamicContentDiv.appendChild(paragraphGroup);
+        
+        // Initialize Quill editor for the new paragraph
+        if (window.initQuillEditor) {
+            window.initQuillEditor("paragraph-" + contentCount);
+        }
     });
 
     // Função para adicionar uma imagem

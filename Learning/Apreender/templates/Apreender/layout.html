@@ -10,7 +10,30 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
         <script>hljs.highlightAll();</script>
-    </head>
+        <script>
+          function renderLatex(){
+            window.MathJax = {
+              tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                tags: 'ams'
+              },
+              options: {
+
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+              }
+            };
+          }
+
+          document.addEventListener("DOMContentLoaded", function() {
+            renderLatex();
+          });
+        </script>
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+        <script src="{% static 'Apreender/quillEditor.js' %}"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      </head>
     <body class="">
         <header class="header">
     <nav class="navbar">

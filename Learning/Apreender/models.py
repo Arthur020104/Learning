@@ -5,34 +5,34 @@ from django.utils import timezone  # Better to use timezone if USE_TZ is enabled
 
 class User(AbstractUser):
     class Meta:
-        app_label = 'Apreender'
+      app_label = 'Apreender'
     
     # Customizing ManyToMany relationships to avoid conflicts
     groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='customUserSet',
-        blank=True,
-        help_text='The groups this user belongs to.',
-        verbose_name='groups'
+      'auth.Group',
+      related_name='customUserSet',
+      blank=True,
+      help_text='The groups this user belongs to.',
+      verbose_name='groups'
     )
     userPermissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='customUserPermissions',
-        blank=True,
-        help_text='Specific permissions for this user.',
-        verbose_name='user permissions'
+      'auth.Permission',
+      related_name='customUserPermissions',
+      blank=True,
+      help_text='Specific permissions for this user.',
+      verbose_name='user permissions'
     )
 
     def __str__(self):
-        return f"{self.username} - ID: {self.id}"
+      return f"{self.username} - ID: {self.id}"
 
 class Subject(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(max_length=500)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return f"{self.name} - Description: {self.description} - Owner: {self.owner}"
+  name = models.CharField(max_length=100)
+  description = models.TextField(max_length=500)
+  owner = models.ForeignKey(User, on_delete=models.CASCADE)
+  
+  def __str__(self):
+      return f"{self.name} - Description: {self.description} - Owner: {self.owner}"
 
 class Topic(models.Model):
     name = models.CharField(max_length=100)
@@ -100,6 +100,7 @@ class Topic(models.Model):
       self.learningLevel += 1
       self.save()
     
+    # FLAG: Flawed Behavior - A method starting with `should_` typically shouldn't cause side effects like saving to the database. This violates the Single Responsibility Principle.
     def shouldSuggestToday(self):
         if self.nextSuggestion <= datetime.date.today():
             self.lastSuggestion = datetime.date.today()

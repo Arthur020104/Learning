@@ -18,7 +18,7 @@
 
         {% if problem.image %}
             <div class="question-image">
-                <img src="/media/{{ problem.image }}" alt="Imagem do problema">
+                <img src="{{ problem.image.url }}" alt="Imagem do problema">
             </div>
         {% endif %}
 
@@ -28,19 +28,4 @@
             <button type="submit" class="btn-acertou">Acertou!</button>
         </form>
     </div>
-
-     <script>
-      window.MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']],
-          displayMath: [['$$', '$$'], ['\\[', '\\]']],
-          tags: 'ams'
-        },
-        options: {
-
-          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-        }
-      };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 {% endblock %}
