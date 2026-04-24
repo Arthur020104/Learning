@@ -285,7 +285,7 @@ input[type="checkbox"]:checked::after {
     box-shadow: var(--shadow-subtle);
     min-width: 240px;
     z-index: 10;
-    margin-top: 8px;
+    margin-top: 0px;
     padding: 8px 0;
 }
 
